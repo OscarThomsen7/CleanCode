@@ -7,7 +7,6 @@ namespace WebShopCleanCode
         {
             var context = new Context();
             context.Run();
-            
         }
     }
 }
