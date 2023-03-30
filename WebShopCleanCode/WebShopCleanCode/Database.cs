@@ -127,7 +127,7 @@ namespace WebShopCleanCode
         {
             CustomerBuilder customerBuilder = new CustomerBuilder();
             Customer customer = new Customer();
-            using var connection = new SQLiteConnection(_dbFilePath);
+            SQLiteConnection connection = new SQLiteConnection("Data Source=" + _dbFilePath);
             connection.Open();
 
             using var command = new SQLiteCommand(connection);
