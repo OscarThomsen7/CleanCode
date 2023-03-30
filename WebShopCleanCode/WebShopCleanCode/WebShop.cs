@@ -1,6 +1,4 @@
 ﻿using WebShopCleanCode.Builder.BuildCustomer;
-using WebShopCleanCode.State;
-using WebShopCleanCode.State.States;
 
 namespace WebShopCleanCode;
 
@@ -13,8 +11,8 @@ public class WebShop
     public Customer? CurrentCustomer { get; set; }
     public bool IsLoggedIn { get; set; }
     public int CurrentChoice { get; set; } = 1;
-    public string? Username { get; set; }
-    public string? Password { get; set; }
+    public string? Username { get; set; } = "";
+    public string? Password { get; set; } = "";
     private delegate string ExecuteMethod();
 
     private ExecuteMethod _executeMethod;

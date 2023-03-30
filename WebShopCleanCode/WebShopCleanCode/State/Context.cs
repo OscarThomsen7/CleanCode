@@ -18,24 +18,24 @@ public class Context
     }
     private void SetDictionary()
     {
-        _inputDictionary.Add("left", new CommandExecutor(() => MoveLeft()));
-        _inputDictionary.Add("l", new CommandExecutor(() => MoveLeft()));
-        _inputDictionary.Add("right", new CommandExecutor(() => MoveRight()));
-        _inputDictionary.Add("r", new CommandExecutor(() => MoveRight()));
-        _inputDictionary.Add("ok", new CommandExecutor(() => OnOk()));
-        _inputDictionary.Add("o", new CommandExecutor(() => OnOk()));
-        _inputDictionary.Add("k", new CommandExecutor(() => OnOk()));
-        _inputDictionary.Add("back", new CommandExecutor(() => OnBack()));
-        _inputDictionary.Add("b", new CommandExecutor(() => OnBack()));
-        _inputDictionary.Add("q", new CommandExecutor(() => Quit()));
-        _inputDictionary.Add("quit", new CommandExecutor(() => Quit()));
+        _inputDictionary.Add("left", new CommandExecutor(MoveLeft));
+        _inputDictionary.Add("l", new CommandExecutor(MoveLeft));
+        _inputDictionary.Add("right", new CommandExecutor(MoveRight));
+        _inputDictionary.Add("r", new CommandExecutor(MoveRight));
+        _inputDictionary.Add("ok", new CommandExecutor(OnOk));
+        _inputDictionary.Add("o", new CommandExecutor(OnOk));
+        _inputDictionary.Add("k", new CommandExecutor(OnOk));
+        _inputDictionary.Add("back", new CommandExecutor(OnBack));
+        _inputDictionary.Add("b", new CommandExecutor(OnBack));
+        _inputDictionary.Add("q", new CommandExecutor(Quit));
+        _inputDictionary.Add("quit", new CommandExecutor(Quit));
     }
     public void LogOut()
     {
         _currentWebShopState.CurrentCustomer = null;
         _currentWebShopState.IsLoggedIn = false;
-        _currentWebShopState.Password = null;
-        _currentWebShopState.Username = null;
+        _currentWebShopState.Password = "";
+        _currentWebShopState.Username = "";
         ChangeState(new MainState(this));
     }
 

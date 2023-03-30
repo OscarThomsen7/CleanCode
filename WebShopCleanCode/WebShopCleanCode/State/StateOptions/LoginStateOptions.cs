@@ -23,7 +23,7 @@ public class LoginStateOptions : IOption
 
     public void Option3()
     {
-        if (_context.GetUserName().Equals(null) || _context.GetPassWord().Equals(null))
+        if (_context.GetUserName().Equals("") || _context.GetPassWord().Equals(""))
         {
             _context.Message("Incomplete data.");
             return;
