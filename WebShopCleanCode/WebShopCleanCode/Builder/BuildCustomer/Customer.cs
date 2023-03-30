@@ -2,6 +2,7 @@
 
 public class Customer
 {
+    public int Id { get; set; }
     public string Username { get; }
     public string Password { get; }
     public string FirstName { get; }
@@ -12,8 +13,9 @@ public class Customer
     public string PhoneNumber { get; }
     public int Funds { get; set; }
     public List<Order> Orders { get; }
-    public Customer(string username, string password, string firstName, string lastName, string email, int age, string address, string phoneNumber)
+    public Customer(string username, string password, string firstName, string lastName, string email, int age, string address, string phoneNumber)//int id, 
     {
+        //Id = id;
         Username = username;
         Password = password;
         FirstName = firstName;

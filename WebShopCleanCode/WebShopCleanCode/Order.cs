@@ -2,11 +2,13 @@
 {
     public class Order
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public int BoughtFor { get; set; }
         public DateTime PurchaseTime { get; set; }
-        public Order(string name, int boughtFor, DateTime purchaseTime)
+        public Order(string name, int boughtFor, DateTime purchaseTime)//int id, 
         {
+            //Id = id;
             Name = name;
             BoughtFor = boughtFor;
             PurchaseTime = purchaseTime;

@@ -23,7 +23,10 @@ public class WebShop
     {
         Products = _database.GetProducts();
         Customers = _database.GetCustomers();
+        _database.CreateDatabase();
     }
+    
+    
 
     public void RegisterCustomer()
     {
