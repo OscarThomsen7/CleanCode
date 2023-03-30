@@ -34,13 +34,14 @@ namespace WebShopCleanCode
             if (!File.Exists(_dbFilePath))
             {
                 SQLiteConnection.CreateFile(_dbFilePath);
+                SQLiteConnection connection = new SQLiteConnection("Data Source=" + _dbFilePath);
+                connection.Open();
+                CreateCustomersTable(connection);
+                CreateOrdersTable(connection);
+                CreateProductsTable(connection);
+                connection.Close();
             }
-            SQLiteConnection connection = new SQLiteConnection("Data Source=" + _dbFilePath);
-            connection.Open();
-            CreateCustomersTable(connection);
-            CreateOrdersTable(connection);
-            CreateProductsTable(connection);
-            connection.Close();
+            
         }
 
         private void CreateProductsTable(SQLiteConnection connection)
