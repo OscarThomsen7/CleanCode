@@ -7,13 +7,17 @@ namespace WebShopCleanCode.State;
 public class Context
 {
     private MenuTemplate _currentMenuState;
+    private Database _database;
     private readonly WebShop _currentWebShopState;
     private Dictionary<string, CommandExecutor> _inputDictionary = new();
 
     public Context()
     {
+        _database = new Database();
         _currentWebShopState = new WebShop();
         _currentMenuState = new MainState(this);
+        _currentWebShopState.Products = _database.GetProducts();
+        _currentWebShopState.Customers = _database.GetCustomers();
         SetDictionary();
     }
     private void SetDictionary()
@@ -143,8 +147,8 @@ public class Context
     }
 
     public void RegisterCustomer()
-    {
-        _currentWebShopState.RegisterCustomer();
+    { 
+        _database.InsertCustomer(_currentWebShopState.RegisterCustomer());
         ChangeState(new MainState(this));
     }
 

@@ -4,10 +4,10 @@ namespace WebShopCleanCode;
 
 public class WebShop
 {
-    private readonly Database _database = new();
+    //private readonly Database _database = new();
     private readonly CustomerBuilder _customerBuilder = new();
-    public List<Product> Products { get;}
-    public List<Customer?> Customers { get;}
+    public List<Product> Products { get; set; }
+    public List<Customer?> Customers { get; set; }
     public Customer? CurrentCustomer { get; set; }
     public bool IsLoggedIn { get; set; }
     public int CurrentChoice { get; set; } = 1;
@@ -21,19 +21,19 @@ public class WebShop
 
     public WebShop()
     {
-        _database.CreateDatabase();
-        Products = _database.GetProducts();
-        Customers = _database.GetCustomers();
+        //_database.CreateDatabase();
+        //Products = _database.GetProducts();
+        //Customers = _database.GetCustomers();
     }
     
-    public void RegisterCustomer()
+    public Customer RegisterCustomer()
     {
         Console.WriteLine("Please write your username.");
         var input = Console.ReadLine()!;
         if (Customers.Any(customer => customer!.Username.Equals(input)))
         {
             Console.WriteLine("\nUsername already exists.\n");
-            return;
+            return null;
         }
         _customerBuilder.SetUsername(input);
         _customerBuilder.SetPassword(RegisterProperty("a password", "password.", "Please actually write something."));
@@ -48,8 +48,8 @@ public class WebShop
         Customers.Add(newCustomer);
         CurrentCustomer = newCustomer;
         IsLoggedIn = true;
-        _database.InsertCustomer(CurrentCustomer);
         Console.WriteLine($"\n{newCustomer!.Username} successfully added and is now logged in.\n");
+        return newCustomer;
     }
     private void SetDictionary(string instruction, string message)
     {
