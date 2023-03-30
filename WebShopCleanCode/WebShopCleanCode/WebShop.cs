@@ -37,13 +37,13 @@ public class WebShop
             return;
         }
         _customerBuilder.SetUsername(input);
-        _customerBuilder.SetPassword(RegisterProperty(" password", "password.", "Please actually write something."));
-        _customerBuilder.SetFirstName(RegisterProperty(" first name", "first name.", "Please actually write something."));
-        _customerBuilder.SetLastName(RegisterProperty(" last name", "last name.", "Please actually write something."));
-        _customerBuilder.SetEmail(RegisterProperty("n email", "email.", "Please actually write something."));
-        _customerBuilder.SetAge(RegisterProperty("n age", "age.", "Please write a number."));
-        _customerBuilder.SetAddress(RegisterProperty("n address", "address.", "Please actually write something."));
-        _customerBuilder.SetPhoneNumber(RegisterProperty(" phone number", "phone number.", "Please actually write something."));
+        _customerBuilder.SetPassword(RegisterProperty("a password", "password.", "Please actually write something."));
+        _customerBuilder.SetFirstName(RegisterProperty("a first name", "first name.", "Please actually write something."));
+        _customerBuilder.SetLastName(RegisterProperty("a last name", "last name.", "Please actually write something."));
+        _customerBuilder.SetEmail(RegisterProperty("an email", "email.", "Please actually write something."));
+        _customerBuilder.SetAge(RegisterProperty("an age", "age.", "Please write a number."));
+        _customerBuilder.SetAddress(RegisterProperty("an address", "address.", "Please actually write something."));
+        _customerBuilder.SetPhoneNumber(RegisterProperty("a phone number", "phone number.", "Please actually write something."));
         Customer newCustomer = _customerBuilder.Build();
         
         Customers.Add(newCustomer);
@@ -65,7 +65,7 @@ public class WebShop
         
         while (true)
         {
-            Console.WriteLine($"Do you want a{question}? y/n.");
+            Console.WriteLine($"Do you want {question}? y/n.");
             var choice = Console.ReadLine()!;
 
             foreach (var item in _inputDictionary.Where(item => choice.ToLower().Equals(item.Key.ToLower())))
