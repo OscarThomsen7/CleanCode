@@ -41,7 +41,6 @@ namespace WebShopCleanCode
                 CreateProductsTable(connection, "Orders");
                 connection.Close();
             }
-            
         }
         
         private void CreateProductsTable(SQLiteConnection connection, string orders)
