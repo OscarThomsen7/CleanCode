@@ -17,7 +17,7 @@
         {
             return NrInStock > 0;
         }
-        public void PrintInfo()
+        public void PrintProductInfo()
         {
             Console.WriteLine(Name + ": " + Price + "kr, " + NrInStock + " in stock.");
         }

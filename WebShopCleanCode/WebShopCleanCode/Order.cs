@@ -13,7 +13,7 @@
             BoughtFor = boughtFor;
             PurchaseTime = purchaseTime;
         }
-        public void PrintInfo()
+        public void PrintOrderInfo()
         {
             Console.WriteLine(Name + ", bought for " + BoughtFor + "kr, time: " + PurchaseTime + ".");
         }

@@ -175,7 +175,7 @@ public class OriginalGrossCode
                                     currentCustomer.PrintOrders();
                                     break;
                                 case 2:
-                                    currentCustomer.PrintInfo();
+                                    currentCustomer.PrintCustomerInfo();
                                     break;
                                 case 3:
                                     Console.WriteLine("How many funds would you like to add?");
@@ -274,7 +274,7 @@ public class OriginalGrossCode
                                     Console.WriteLine();
                                     foreach (Product product in products)
                                     {
-                                        product.PrintInfo();
+                                        product.PrintProductInfo();
                                     }
                                     Console.WriteLine();
                                     break;

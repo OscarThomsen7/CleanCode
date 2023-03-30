@@ -8,6 +8,8 @@ namespace WebShopCleanCode
     {
 
         string _dbFilePath = "Database.sqlite";
+        string _customers = "Customers";
+        string _orders = "Orders";
         // We just pretend this accesses a real database.
         private List<Product> productsInDatabase;
         private List<Customer?> customersInDatabase;
@@ -45,19 +47,17 @@ namespace WebShopCleanCode
         
         private void CreateProductsTable(SQLiteConnection connection)
         {
-            string orders = "Orders";
             string createTableSql = "CREATE TABLE Products (Id INTEGER PRIMARY KEY, Name TEXT, Price INTEGER, NumberInStock INTEGER," +
-                                    "FOREIGN KEY (Id) REFERENCES " + orders + "(ProductId))";
+                                    "FOREIGN KEY (Id) REFERENCES " + _orders + "(ProductId))";
             SQLiteCommand createTableCmd = new SQLiteCommand(createTableSql, connection);
             createTableCmd.ExecuteNonQuery();
         }
 
         private void CreateCustomersTable(SQLiteConnection connection)
         {
-            string orders = "Orders";
             string createTableSql = "CREATE TABLE Customers (Id INTEGER PRIMARY KEY, Username TEXT, Password TEXT, Firstname TEXT" +
                                     ", Lastname TEXT, Email TEXT, Age INTEGER, Address TEXT, Phonenumber TEXT, Funds INTEGER" +
-                                    ", FOREIGN KEY (Id) REFERENCES " + orders +"(CustomerId))";
+                                    ", FOREIGN KEY (Id) REFERENCES " + _orders +"(CustomerId))";
             SQLiteCommand createTableCmd = new SQLiteCommand(createTableSql, connection);
             createTableCmd.ExecuteNonQuery();
         }
@@ -102,6 +102,7 @@ namespace WebShopCleanCode
             insertOrdersDataCmd.Parameters.AddWithValue("@Phonenumber", customer.PhoneNumber);
             insertOrdersDataCmd.Parameters.AddWithValue("@Funds", customer.Funds);
             insertOrdersDataCmd.ExecuteNonQuery();
+            customer.Id = (int)connection.LastInsertRowId;
             connection.Close();
         }
         
@@ -123,7 +124,7 @@ namespace WebShopCleanCode
         }
 
 
-        public Customer GetCustomersFromDb()
+        public void GetCustomersFromDb()
         {
             CustomerBuilder customerBuilder = new CustomerBuilder();
             Customer customer = new Customer();
@@ -131,7 +132,7 @@ namespace WebShopCleanCode
             connection.Open();
 
             using var command = new SQLiteCommand(connection);
-            command.CommandText = "SELECT * FROM Customers;";
+            command.CommandText = "SELECT * FROM " + _customers;
 
             using var reader = command.ExecuteReader();
             while (reader.Read())
@@ -147,10 +148,8 @@ namespace WebShopCleanCode
                 customerBuilder.SetPhoneNumber(reader.GetString(8));
                 customerBuilder.SetFunds(reader.GetInt32(9));
                 customer = customerBuilder.Build();
-                            
-                customer.PrintInfo();
+                customersInDatabase.Add(customer);
             }
-            return customer;
         }
 
         public List<Product> GetProducts()

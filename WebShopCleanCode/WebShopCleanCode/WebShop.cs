@@ -21,13 +21,11 @@ public class WebShop
 
     public WebShop()
     {
+        _database.CreateDatabase();
         Products = _database.GetProducts();
         Customers = _database.GetCustomers();
-        //_database.CreateDatabase();
     }
     
-    
-
     public void RegisterCustomer()
     {
         Console.WriteLine("Please write your username.");
@@ -50,6 +48,7 @@ public class WebShop
         Customers.Add(newCustomer);
         CurrentCustomer = newCustomer;
         IsLoggedIn = true;
+        _database.InsertCustomer(CurrentCustomer);
         Console.WriteLine($"\n{newCustomer!.Username} successfully added and is now logged in.\n");
     }
     private void SetDictionary(string instruction, string message)

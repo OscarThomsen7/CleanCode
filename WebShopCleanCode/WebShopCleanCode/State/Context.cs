@@ -98,7 +98,7 @@ public class Context
         Console.WriteLine();
         foreach (Product product in GetProducts())
         {
-            product.PrintInfo();
+            product.PrintProductInfo();
         }
         Console.WriteLine();
     }
@@ -109,7 +109,7 @@ public class Context
     }
     public void PrintInfo()
     {
-        _currentWebShopState.CurrentCustomer!.PrintInfo();
+        _currentWebShopState.CurrentCustomer!.PrintCustomerInfo();
     }
     public void AddFunds()
     {
