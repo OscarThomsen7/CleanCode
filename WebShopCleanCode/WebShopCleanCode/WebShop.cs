@@ -32,7 +32,7 @@ public class WebShop
         var input = Console.ReadLine()!;
         if (Customers.Any(customer => customer!.Username.Equals(input)))
         {
-            Console.WriteLine("\nUsername already exists.\n");
+            Console.WriteLine("\nUsername already exists.\n"); //Fixa med att lägga till kund till db i context Registercustomer
             return null;
         }
         _customerBuilder.SetUsername(input);
