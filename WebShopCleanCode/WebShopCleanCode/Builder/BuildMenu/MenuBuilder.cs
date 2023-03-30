@@ -10,7 +10,6 @@ public class MenuBuilder
     string _option4 = "";
     string _info = "";
 
-    
     public MenuBuilder SetName(string input)
     {
         _name = input;

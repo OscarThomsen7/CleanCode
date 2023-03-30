@@ -57,7 +57,7 @@ namespace WebShopCleanCode
             string orders = "Orders";
             string createTableSql = "CREATE TABLE Customers (Id INTEGER PRIMARY KEY, Username TEXT, Password TEXT, Firstname TEXT" +
                                     ", Lastname TEXT, Email TEXT, Age INTEGER, Address TEXT, Phonenumber TEXT, Funds INTEGER" +
-                                    ", NumberInStock TEXT, FOREIGN KEY (Id) REFERENCES " + orders +"(CustomerId))";
+                                    ", FOREIGN KEY (Id) REFERENCES " + orders +"(CustomerId))";
             SQLiteCommand createTableCmd = new SQLiteCommand(createTableSql, connection);
             createTableCmd.ExecuteNonQuery();
         }
@@ -69,9 +69,10 @@ namespace WebShopCleanCode
             createTableCmd.ExecuteNonQuery();
         }
 
-        public void InsertProduct(Product product, int id, string dbName, string products)
+        public void InsertProduct(Product product)
         {
-            SQLiteConnection connection = new SQLiteConnection("Data Source=" + dbName);
+            string products = "Products";
+            SQLiteConnection connection = new SQLiteConnection("Data Source=" + _dbFilePath);
             connection.Open();
             string insertOrdersDataSql = "INSERT INTO " + products +"(Name, Price, NumberInStock) " +
                                          "VALUES (@Name, @Price, @NumberInStock)";
@@ -83,12 +84,13 @@ namespace WebShopCleanCode
             connection.Close();
         }
         
-        public void InsertCustomer(Customer customer, int id, string dbName, string customers)
+        public void InsertCustomer(Customer customer)
         {
-            SQLiteConnection connection = new SQLiteConnection("Data Source=" + dbName);
+            string customers = "Customers";
+            SQLiteConnection connection = new SQLiteConnection("Data Source=" + _dbFilePath);
             connection.Open();
-            string insertOrdersDataSql = "INSERT INTO " + customers +"(Username, Password, Firstname, Lastname, Email, Age, Address, Phonenumber, Funds, NumberInStock)" +
-                                         " VALUES (@Username, @Password, @Firstname, @Lastname, @Email, @Age, @Address, @Phonenumber, @Funds, @NumberInStock)";
+            string insertOrdersDataSql = "INSERT INTO " + customers +"(Username, Password, Firstname, Lastname, Email, Age, Address, Phonenumber, Funds)" +
+                                         " VALUES (@Username, @Password, @Firstname, @Lastname, @Email, @Age, @Address, @Phonenumber, @Funds)";
             SQLiteCommand insertOrdersDataCmd = new SQLiteCommand(insertOrdersDataSql, connection);
             insertOrdersDataCmd.Parameters.AddWithValue("@Username", customer.Username);
             insertOrdersDataCmd.Parameters.AddWithValue("@Password", customer.Password);
@@ -103,11 +105,11 @@ namespace WebShopCleanCode
             connection.Close();
         }
         
-        /*
-        public void InsertOrder(Order order, Customer customer, Product product, string dbName)
+        
+        public void InsertOrder(Order order, Customer customer, Product product)
         {
             string orders = "Orders";
-            SQLiteConnection connection = new SQLiteConnection("Data Source=" + dbName);
+            SQLiteConnection connection = new SQLiteConnection("Data Source=" + _dbFilePath);
             connection.Open();
             string insertOrdersDataSql = "INSERT INTO " + orders +"(CustomerId, ProductId, ProductName, Price, PurchaseTime)" +
                                          " VALUES (@CustomerId, @ProductId, @Price, @PurchaseTime)";
@@ -119,7 +121,37 @@ namespace WebShopCleanCode
             insertOrdersDataCmd.ExecuteNonQuery();
             connection.Close();
         }
-        */
+
+
+        public Customer GetCustomersFromDb()
+        {
+            CustomerBuilder customerBuilder = new CustomerBuilder();
+            Customer customer = new Customer();
+            using var connection = new SQLiteConnection(_dbFilePath);
+            connection.Open();
+
+            using var command = new SQLiteCommand(connection);
+            command.CommandText = "SELECT * FROM Customers;";
+
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                customerBuilder.SetId(reader.GetInt32(0));
+                customerBuilder.SetUsername(reader.GetString(1));
+                customerBuilder.SetPassword(reader.GetString(2));
+                customerBuilder.SetFirstName(reader.GetString(3));
+                customerBuilder.SetLastName(reader.GetString(4));
+                customerBuilder.SetEmail(reader.GetString(5));
+                customerBuilder.SetAge(reader.GetInt32(6).ToString());
+                customerBuilder.SetAddress(reader.GetString(7));
+                customerBuilder.SetPhoneNumber(reader.GetString(8));
+                customerBuilder.SetFunds(reader.GetInt32(9));
+                customer = customerBuilder.Build();
+                            
+                customer.PrintInfo();
+            }
+            return customer;
+        }
 
         public List<Product> GetProducts()
         {

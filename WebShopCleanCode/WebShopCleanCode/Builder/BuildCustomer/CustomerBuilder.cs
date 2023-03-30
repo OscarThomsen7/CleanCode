@@ -2,6 +2,7 @@
 
 public class CustomerBuilder
 {
+    private int _id;
     private string _username;
     private string _password;
     private string _firstName;
@@ -10,7 +11,18 @@ public class CustomerBuilder
     private int _age = -1;
     private string _address;
     private string _phoneNumber;
+    private int _funds;
 
+    public void SetId(int id)
+    {
+        _id = id;
+    }
+
+    public void SetFunds(int funds)
+    {
+        _funds = funds;
+    }
+    
     public void SetUsername(string input)
     {
         _username = input;
@@ -54,6 +66,6 @@ public class CustomerBuilder
     }
     public Customer Build()
     {
-        return new Customer(_username, _password, _firstName, _lastName, _email, _age, _address, _phoneNumber);
+        return new Customer(_username, _password, _firstName, _lastName, _email, _age, _address, _phoneNumber, _id, _funds);
     }
 }
