@@ -37,22 +37,24 @@ namespace WebShopCleanCode
                 SQLiteConnection connection = new SQLiteConnection("Data Source=" + _dbFilePath);
                 connection.Open();
                 CreateOrdersTable(connection);
-                CreateCustomersTable(connection, "Orders");
-                CreateProductsTable(connection, "Orders");
+                CreateCustomersTable(connection);
+                CreateProductsTable(connection);
                 connection.Close();
             }
         }
         
-        private void CreateProductsTable(SQLiteConnection connection, string orders)
+        private void CreateProductsTable(SQLiteConnection connection)
         {
+            string orders = "Orders";
             string createTableSql = "CREATE TABLE Products (Id INTEGER PRIMARY KEY, Name TEXT, Price INTEGER, NumberInStock INTEGER," +
                                     "FOREIGN KEY (Id) REFERENCES " + orders + "(ProductId))";
             SQLiteCommand createTableCmd = new SQLiteCommand(createTableSql, connection);
             createTableCmd.ExecuteNonQuery();
         }
 
-        private void CreateCustomersTable(SQLiteConnection connection, string orders)
+        private void CreateCustomersTable(SQLiteConnection connection)
         {
+            string orders = "Orders";
             string createTableSql = "CREATE TABLE Customers (Id INTEGER PRIMARY KEY, Username TEXT, Password TEXT, Firstname TEXT" +
                                     ", Lastname TEXT, Email TEXT, Age INTEGER, Address TEXT, Phonenumber TEXT, Funds INTEGER" +
                                     ", NumberInStock TEXT, FOREIGN KEY (Id) REFERENCES " + orders +"(CustomerId))";
@@ -62,7 +64,7 @@ namespace WebShopCleanCode
 
         private void CreateOrdersTable(SQLiteConnection connection)
         {
-            string createTableSql = "CREATE TABLE Orders (Id INTEGER PRIMARY KEY, CustomerId INTEGER, ProductId TEXT, Price INTEGER, PurchaseTime DATE)";
+            string createTableSql = "CREATE TABLE Orders (Id INTEGER PRIMARY KEY, CustomerId INTEGER, ProductId INTEGER, ProductName TEXT, Price INTEGER, PurchaseTime DATE)";
             SQLiteCommand createTableCmd = new SQLiteCommand(createTableSql, connection);
             createTableCmd.ExecuteNonQuery();
         }
@@ -71,9 +73,9 @@ namespace WebShopCleanCode
         {
             SQLiteConnection connection = new SQLiteConnection("Data Source=" + dbName);
             connection.Open();
-            string insertOrdersDataSql = "INSERT INTO " + products +"(Id, Name, Price, NumberInStock) VALUES (@Id, @Name, @Price, @NumberInStock)";
+            string insertOrdersDataSql = "INSERT INTO " + products +"(Name, Price, NumberInStock) " +
+                                         "VALUES (@Name, @Price, @NumberInStock)";
             SQLiteCommand insertOrdersDataCmd = new SQLiteCommand(insertOrdersDataSql, connection);
-            insertOrdersDataCmd.Parameters.AddWithValue("@Id", id);
             insertOrdersDataCmd.Parameters.AddWithValue("@Name", product.Name);
             insertOrdersDataCmd.Parameters.AddWithValue("@Price", product.Price);
             insertOrdersDataCmd.Parameters.AddWithValue("@NumberInStock", product.NrInStock);
@@ -85,10 +87,9 @@ namespace WebShopCleanCode
         {
             SQLiteConnection connection = new SQLiteConnection("Data Source=" + dbName);
             connection.Open();
-            string insertOrdersDataSql = "INSERT INTO " + customers +"(Id, Username, Password, Firstname, Lastname, Email, Age, Address, Phonenumber, Funds, NumberInStock)" +
-                                         " VALUES (@Id, @Username, @Password, @Firstname, @Lastname, @Email, @Age, @Address, @Phonenumber, @Funds, @NumberInStock)";
+            string insertOrdersDataSql = "INSERT INTO " + customers +"(Username, Password, Firstname, Lastname, Email, Age, Address, Phonenumber, Funds, NumberInStock)" +
+                                         " VALUES (@Username, @Password, @Firstname, @Lastname, @Email, @Age, @Address, @Phonenumber, @Funds, @NumberInStock)";
             SQLiteCommand insertOrdersDataCmd = new SQLiteCommand(insertOrdersDataSql, connection);
-            insertOrdersDataCmd.Parameters.AddWithValue("@Id", id);
             insertOrdersDataCmd.Parameters.AddWithValue("@Username", customer.Username);
             insertOrdersDataCmd.Parameters.AddWithValue("@Password", customer.Password);
             insertOrdersDataCmd.Parameters.AddWithValue("@Firstname", customer.FirstName);
@@ -102,21 +103,23 @@ namespace WebShopCleanCode
             connection.Close();
         }
         
-        public void InsertOrder(Order order, Customer customer, int id, string dbName, string orders)
+        /*
+        public void InsertOrder(Order order, Customer customer, Product product, string dbName)
         {
+            string orders = "Orders";
             SQLiteConnection connection = new SQLiteConnection("Data Source=" + dbName);
             connection.Open();
-            string insertOrdersDataSql = "INSERT INTO " + orders +"(Id, CustomerId, ProductId, Price, PurchaseTime)" +
-                                         " VALUES (@Id, @CustomerId, @ProductId, @Price, @PurchaseTime)";
+            string insertOrdersDataSql = "INSERT INTO " + orders +"(CustomerId, ProductId, ProductName, Price, PurchaseTime)" +
+                                         " VALUES (@CustomerId, @ProductId, @Price, @PurchaseTime)";
             SQLiteCommand insertOrdersDataCmd = new SQLiteCommand(insertOrdersDataSql, connection);
-            insertOrdersDataCmd.Parameters.AddWithValue("@Id", id);
-            //insertOrdersDataCmd.Parameters.AddWithValue("@CustomerId", customer.Id);
-            //insertOrdersDataCmd.Parameters.AddWithValue("@ProductId", product.Id);
+            insertOrdersDataCmd.Parameters.AddWithValue("@CustomerId", customer.Id);
+            insertOrdersDataCmd.Parameters.AddWithValue("@ProductId", product.Id);
             insertOrdersDataCmd.Parameters.AddWithValue("@Price", order.BoughtFor);
             insertOrdersDataCmd.Parameters.AddWithValue("@PurchaseTime", order.PurchaseTime);
             insertOrdersDataCmd.ExecuteNonQuery();
             connection.Close();
         }
+        */
 
         public List<Product> GetProducts()
         {
