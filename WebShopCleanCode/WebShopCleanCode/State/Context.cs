@@ -6,6 +6,8 @@ namespace WebShopCleanCode.State;
 
 public class Context
 {
+    //This class is what runs the whole application.
+    //different methods will be executed depending oon what state/menu the application is set to.
     public Database Db { get;}
     private MenuTemplate _currentMenuState;
     private readonly WebShop _currentWebShopState;
@@ -18,6 +20,10 @@ public class Context
         Db = _currentWebShopState.Database;
         SetDictionary();
     }
+    
+    
+    
+    //Create a dictionary of commands to get rid of the need for nested ifs or switch cases when taking user input.
     private void SetDictionary()
     {
         _inputDictionary.Add("left", new CommandExecutor(MoveLeft));
@@ -32,6 +38,8 @@ public class Context
         _inputDictionary.Add("q", new CommandExecutor(Quit));
         _inputDictionary.Add("quit", new CommandExecutor(Quit));
     }
+    
+    //Logs customer out and resets login properties
     public void LogOut()
     {
         _currentWebShopState.CurrentCustomer = null;
@@ -41,16 +49,20 @@ public class Context
         ChangeState(new MainState(this));
     }
 
+    
+    //Gets logged in customers username
     public string GetUserName()
     {
         return _currentWebShopState.Username!;
     }
 
+    //Gets logged in customers password
     public string GetPassWord()
     {
         return _currentWebShopState.Password!;
     }
 
+    //Sets username property to be used for login attempt
     public void SetUserName()
     {
         Message("A keyboard appears.\nPlease input your username.");
@@ -58,6 +70,7 @@ public class Context
         Console.WriteLine();
     }
     
+    //Sets password property to be used for login attempt 
     public void SetPassWord()
     {
         Message("A keyboard appears.\nPlease input your password.");
@@ -65,26 +78,38 @@ public class Context
         Console.WriteLine();
     }
     
+    
+    //Gets product list length
     public int GetProductCount()
     {
         return _currentWebShopState.Products.Count;
     }
+    
+    
+    //Gets products list
     public List<Product> GetProducts()
     {
         return _currentWebShopState.Products;
     }
  
+    
+    //sets the current customer to a customer object
     public void SetCurrentCustomer(Customer? customer)
     {
         _currentWebShopState.CurrentCustomer = customer;
         _currentWebShopState.IsLoggedIn = true;
     }
     
+    
+    //Gets customer list
     public List<Customer?> GetCustomers()
     {
         return _currentWebShopState.Customers;
     }
     
+    
+    
+    //Prints all products for the purchase menu
     public void OutputProducts()
     {
         int spotInList = 1;
@@ -95,6 +120,9 @@ public class Context
         }
         Console.WriteLine("Your funds: " + GetCurrentCustomer()!.Funds);
     }
+    
+    
+    //Prints all products for wares menu
     public void PrintProducts()
     {
         Console.WriteLine();
@@ -105,14 +133,22 @@ public class Context
         Console.WriteLine();
     }
 
+    
+    //Prints all orders of logged in customer
     public void PrintOrders()
     {
         _currentWebShopState.CurrentCustomer!.PrintOrders();
     }
+    
+    //Prints all properties/info of logged in customer
     public void PrintInfo()
     {
         _currentWebShopState.CurrentCustomer!.PrintCustomerInfo();
     }
+    
+    
+    //Adds funds to logged in customer if input is a number.If so, it checks if the number is positive.
+    //If it is then it adds funds to logged in customers account and updates the database
     public void AddFunds()
     {
         Console.WriteLine("How many funds would you like to add?");
@@ -124,7 +160,7 @@ public class Context
                 return;
             }
             GetCurrentCustomer()!.Funds += amount;
-            Db.UpdateIntegerColumn("Customers", "Funds", amount, GetCurrentCustomer().Id);
+            Db.UpdateIntegerColumn("Customers", "Funds", GetCurrentCustomer()!.Funds, GetCurrentCustomer().Id);
             Message($"{amount} added to your profile.");
             return;
         }
