@@ -9,11 +9,6 @@ public class Menu
     public string Option3 { get; set; }
     public string Option4 { get; set; }
     public string Info { get; set; }
-
-    public Menu()
-    {
-        
-    }
     public Menu(string name, int amountOfOptions, string option1, string option2, string option3, string option4, string info)
     {
         Name = name;
@@ -25,6 +20,8 @@ public class Menu
         Info = info;
     }
 
+    
+    //Log the menu properties of the menu object to the console
     public void DisplayMenu(int currentChoice)
     {
         if (!Name.Equals("Purchase menu"))
@@ -41,11 +38,13 @@ public class Menu
         ChoiceRepresentor(currentChoice);
     }
     
-    public void ChoiceRepresentor(int currentChoice)
+    
+    //Method to output the choice bar in the menu
+    private void ChoiceRepresentor(int currentChoice)
     {
-        for (int i = 0; i < AmountOfOptions; i++)
+        for (int i = 1; i <= AmountOfOptions; i++)
         {
-            Console.Write(i + 1 + "\t");
+            Console.Write(i + "\t");
         }
         Console.WriteLine();
         for (int i = 1; i < currentChoice; i++)

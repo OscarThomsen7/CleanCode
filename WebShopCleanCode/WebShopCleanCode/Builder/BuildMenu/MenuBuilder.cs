@@ -10,6 +10,8 @@ public class MenuBuilder
     string _option4 = "";
     string _info = "";
 
+    
+    //Class to build menu objects of different types in a easy way. a main menu with 3 options or a login menu with 4 options for example.
     public MenuBuilder SetName(string input)
     {
         _name = input;

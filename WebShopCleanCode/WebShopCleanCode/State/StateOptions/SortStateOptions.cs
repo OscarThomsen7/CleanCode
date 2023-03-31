@@ -19,28 +19,28 @@ public class SortStateOptions :IOption
 
     public void Option1()
     {
-        _quickSort.SortName(_products, 0, _length - 1, false);
+        _quickSort.SortByName(_products, 0, _length - 1, false);
         _context.Message("Wares sorted.");
         _context.ChangeState(new WaresState(_context));
     }
 
     public void Option2()
     {
-        _quickSort.SortName(_products, 0, _length - 1, true);
+        _quickSort.SortByName(_products, 0, _length - 1, true);
         _context.Message("Wares sorted.");
         _context.ChangeState(new WaresState(_context));
     }
 
     public void Option3()
     {
-        _quickSort.SortPrice(_products, 0, _length - 1, false);
+        _quickSort.SortByPrice(_products, 0, _length - 1, false);
         _context.Message("Wares sorted.");
         _context.ChangeState(new WaresState(_context));
     }
 
     public void Option4()
     {
-        _quickSort.SortPrice(_products, 0, _length - 1, true);
+        _quickSort.SortByPrice(_products, 0, _length - 1, true);
         _context.Message("Wares sorted.");
         _context.ChangeState(new WaresState(_context));
     }

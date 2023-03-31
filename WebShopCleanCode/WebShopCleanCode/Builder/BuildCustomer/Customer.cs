@@ -29,11 +29,13 @@ public class Customer
     }
     
     
+    //Check if customer can afford to buy something
     public bool CanAfford(int price)
     {
         return Funds >= price;
     }
         
+    //Method to check if a property of the customer object is empty. If not, write it to console
     private void LogProperty<T>(string text, T property)
     {
         if (!property!.Equals("") && !property.Equals(-1))
@@ -42,6 +44,8 @@ public class Customer
         }
     }
         
+    
+    //Logs all properties that are not empty strings or -1 to the console
     public void PrintCustomerInfo()
     {
         Console.WriteLine();
@@ -57,6 +61,8 @@ public class Customer
         Console.WriteLine();
     }
 
+    
+    //Log all orders of a customer to the console
     public void PrintOrders()
     {
         Console.WriteLine();

@@ -13,6 +13,8 @@ public class CustomerBuilder
     private string _phoneNumber;
     private int _funds;
 
+    
+    //This class is used to create a customer in a simpler way, used in WebShop class for example.
     public void SetId(int id)
     {
         _id = id;
@@ -43,15 +45,14 @@ public class CustomerBuilder
     public void SetAge(string input)
     {
         if (input.Equals("")) return;
-        try
+        if (int.TryParse(input, out var number))
         {
-            _age = int.Parse(input);
+            _age = number;
+            return;
         }
-        catch (Exception e)
-        {
-            _age = -1;
-        }
+        _age = -1;
     }
+    
     public void SetAddress(string input)
     {
         _address = input;

@@ -4,7 +4,10 @@ public class MenuDirector
 {
     private MenuBuilder _menuBuilder = new MenuBuilder();
 
-    public Menu BuildMainMenu(bool isLoggedIn)//Customer currentCustomer
+    
+    //Class to build specific menus. Sets menu properties to whatever is necessary for a specific menu. Easily extendable.
+    
+    public Menu BuildMainMenu(bool isLoggedIn)
     {
         _menuBuilder.SetName("Main menu")
             .SetInfo("What would you like to do?")
@@ -18,7 +21,7 @@ public class MenuDirector
     }
     
     
-    public Menu BuildWaresMenu(bool isLoggedIn)//Customer currentCustomer
+    public Menu BuildWaresMenu(bool isLoggedIn)
     {
         _menuBuilder.SetName("Wares menu")
             .SetInfo("What would you like to do?")

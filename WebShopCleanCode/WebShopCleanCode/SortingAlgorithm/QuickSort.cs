@@ -2,30 +2,42 @@
 
 public class QuickSort
 {
+    
+    //Sorts a list of products in different ways  
+    
+    
+    //Swaps two indexes with each other
     private void Swap(List<Product> list, int indexFrom, int indexTo)
     {
         (list[indexTo], list[indexFrom]) = (list[indexFrom], list[indexTo]);
     }
 
-    public void SortPrice(List<Product> list, int start, int end, bool ascending)
+    
+    //Sorts items by price
+    public void SortByPrice(List<Product> list, int start, int end, bool ascending)
     {
         if (start < end)
         {
             int pivotIndex = PartitionPrice(list, start, end, ascending);
-            SortPrice(list, start, pivotIndex - 1, ascending);
-            SortPrice(list, pivotIndex + 1, end, ascending);
+            SortByPrice(list, start, pivotIndex - 1, ascending);
+            SortByPrice(list, pivotIndex + 1, end, ascending);
         }
     }
-    public void SortName(List<Product> list, int start, int end, bool ascending)
+    
+    
+    //Sorts items by name
+    public void SortByName(List<Product> list, int start, int end, bool ascending)
     {
         if (start < end)
         {
             int pivotIndex = PartitionName(list, start, end, ascending);
-            SortName(list, start, pivotIndex - 1, ascending);
-            SortName(list, pivotIndex + 1, end, ascending);
+            SortByName(list, start, pivotIndex - 1, ascending);
+            SortByName(list, pivotIndex + 1, end, ascending);
         }
     }
-
+    
+    //Checks what price property at current index and the next index is smaller or larger depending on if ascending is true or not, swaps them accordingly
+    //Returns sorted list
     private int PartitionPrice(List<Product> list, int start, int end, bool ascending)
     {
         var pivot = list[end].Price;
@@ -58,6 +70,10 @@ public class QuickSort
         return start + numberOfItemsSmallerThanOurPivot;
     }
     
+    
+    //Checks what alphabetic order the name property at current index and the next index is smaller or larger depending on if ascending is true or not, swaps them accordingly
+    //Returns sorted list
+
     private int PartitionName(List<Product> list, int start, int end, bool ascending)
     {
         var pivot = list[end].Name;
