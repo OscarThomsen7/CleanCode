@@ -205,7 +205,8 @@ namespace WebShopCleanCode
                     order.ProductId = reader.GetInt32(2);
                     order.Name = reader.GetString(3);
                     order.BoughtFor = reader.GetInt32(4);
-                    order.PurchaseTime = new DateTime(reader.GetOrdinal("PurchaseTime"));
+                    var dateString = (DateTime)reader["PurchaseTime"];
+                    order.PurchaseTime = dateString;
                     _ordersInDatabase.Add(order);
                 }
             }

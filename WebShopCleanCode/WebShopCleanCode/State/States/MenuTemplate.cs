@@ -7,9 +7,6 @@ public class MenuTemplate
 {
     private readonly Context _context;
     private Menu _menu;
-
-    protected delegate void ExecuteMethod();
-    private ExecuteMethod _executeMethod;
     private List<CommandExecutor> _options;
     private CommandExecutor _commandExecutor;
 
