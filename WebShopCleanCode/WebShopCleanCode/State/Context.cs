@@ -21,8 +21,6 @@ public class Context
         SetDictionary();
     }
     
-    
-    
     //Create a dictionary of commands to get rid of the need for nested ifs or switch cases when taking user input.
     private void SetDictionary()
     {
@@ -49,7 +47,6 @@ public class Context
         ChangeState(new MainState(this));
     }
 
-    
     //Gets logged in customers username
     public string GetUserName()
     {
@@ -78,21 +75,18 @@ public class Context
         Console.WriteLine();
     }
     
-    
     //Gets product list length
     public int GetProductCount()
     {
         return _currentWebShopState.Products.Count;
     }
-    
-    
+
     //Gets products list
     public List<Product> GetProducts()
     {
         return _currentWebShopState.Products;
     }
- 
-    
+
     //sets the current customer to a customer object
     public void SetCurrentCustomer(Customer? customer)
     {
@@ -100,15 +94,12 @@ public class Context
         _currentWebShopState.IsLoggedIn = true;
     }
     
-    
     //Gets customer list
     public List<Customer?> GetCustomers()
     {
         return _currentWebShopState.Customers;
     }
-    
-    
-    
+
     //Prints all products for the purchase menu
     public void OutputProducts()
     {
@@ -121,7 +112,6 @@ public class Context
         Console.WriteLine("Your funds: " + GetCurrentCustomer()!.Funds);
     }
     
-    
     //Prints all products for wares menu
     public void PrintProducts()
     {
@@ -132,7 +122,6 @@ public class Context
         }
         Console.WriteLine();
     }
-
     
     //Prints all orders of logged in customer
     public void PrintOrders()
@@ -145,7 +134,6 @@ public class Context
     {
         _currentWebShopState.CurrentCustomer!.PrintCustomerInfo();
     }
-    
     
     //Adds funds to logged in customer if input is a number.If so, it checks if the number is positive.
     //If it is then it adds funds to logged in customers account and updates the database
@@ -166,7 +154,6 @@ public class Context
         }
         Message("Please write a number next time.");
     }
-
     
     //Gets logged in customer
     public Customer? GetCurrentCustomer()
@@ -185,7 +172,6 @@ public class Context
     {
         return _currentWebShopState.CurrentChoice;
     }
-
     
     //adds/registers new customer 
     public void RegisterCustomer()
@@ -193,7 +179,6 @@ public class Context
         _currentWebShopState.RegisterCustomer();
         ChangeState(new MainState(this));
     }
-    
     
     //Change current context/state
     public void ChangeState(MenuTemplate menu)
@@ -219,13 +204,11 @@ public class Context
         SetCurrentChoice(1);
     }
 
-    
     //Executes current back method
     private void OnBack()
     {
         _currentMenuState.Back();
     }
-
     
     //Executes current showmenu method
     private void ShowMenu()
@@ -233,7 +216,6 @@ public class Context
         _currentMenuState.ShowMenu();
         CustomerCheck();
     }
-
     
     //Checks if a customer is logged in to print what customer is logged in at the moment
     private void CustomerCheck()
@@ -248,7 +230,6 @@ public class Context
         
     }
     
-    
     //Checks if parameter equals a key in the commands dictionary. If so, it executes the method connected to that key
     private void MoveInMenu(string choice)
     {
@@ -262,7 +243,6 @@ public class Context
         }
         Console.WriteLine("That is not an applicable option.");
     }
-
     
     //The method that runs entire application
     public void Run()
@@ -275,7 +255,6 @@ public class Context
             MoveInMenu(choice);
         }
     }
-
     
     //Executes current quit method
     private void Quit()

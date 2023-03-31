@@ -26,13 +26,15 @@ public class WebShop
         Customers = Database.GetCustomers();
     }
     
+    
+    //Adds/registers a new customer using the CustomerBuilder Class and logs that new customer in.
     public void RegisterCustomer()
     {
         Console.WriteLine("Please write your username.");
         var input = Console.ReadLine()!;
         if (Customers.Any(customer => customer!.Username.Equals(input)))
         {
-            Console.WriteLine("\nUsername already exists.\n"); //Fixa med att lägga till kund till db i context Registercustomer
+            Console.WriteLine("\nUsername already exists.\n");
             return;
         }
         _customerBuilder.SetUsername(input);
@@ -51,12 +53,16 @@ public class WebShop
         Database.InsertCustomer(newCustomer);
         Console.WriteLine($"\n{CurrentCustomer.Username} successfully added and is now logged in.\n");
     }
+    
+    //Dictionary to execute a delegate if the input matches the key.
     private void SetDictionary(string instruction, string message)
     {
         _inputDictionary.Add("y", () => OnYes(instruction, message));
         _inputDictionary.Add("n", () => "");
     }
 
+    
+    //Asks user if they want to add each property or not.
     private string RegisterProperty(string question, string instruction, string message)
     {
         if (_inputDictionary.Count == 0)
@@ -76,6 +82,8 @@ public class WebShop
             Console.WriteLine("\ny or n, please.\n");
         }
     }
+    
+    //if user says yes in registerproperty it takes a new input that becomes the property value.
     private string OnYes(string instruction, string message)
     {
         while (true)

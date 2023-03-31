@@ -3,6 +3,7 @@ namespace WebShopCleanCode;
 
 public class OriginalGrossCode
 {
+    //This is the absolute menace that my teacher gave me....
     bool running = true;
         Database database = new Database();
         List<Product> products = new List<Product>();

@@ -35,6 +35,8 @@ namespace WebShopCleanCode
             }
         }
 
+        
+        //If a database file does not exist it creates one and creates all the tables. Also gets all data from the database
         private void CreateDatabase()
         {
             if (!File.Exists(_dbFilePath))
@@ -53,6 +55,7 @@ namespace WebShopCleanCode
             SetOrdersToCustomers();
         }
         
+        //Creates products table
         private void CreateProductsTable(SQLiteConnection connection)
         {
             string createTableSql = "CREATE TABLE Products (Id INTEGER PRIMARY KEY, Name TEXT, Price INTEGER, NumberInStock INTEGER," +
@@ -60,6 +63,8 @@ namespace WebShopCleanCode
             SQLiteCommand createTableCmd = new SQLiteCommand(createTableSql, connection);
             createTableCmd.ExecuteNonQuery();
         }
+        
+        //Creates customers table
         private void CreateCustomersTable(SQLiteConnection connection)
         {
             string createTableSql = "CREATE TABLE Customers (Id INTEGER PRIMARY KEY, Username TEXT, Password TEXT, Firstname TEXT" +
@@ -68,12 +73,16 @@ namespace WebShopCleanCode
             SQLiteCommand createTableCmd = new SQLiteCommand(createTableSql, connection);
             createTableCmd.ExecuteNonQuery();
         }
+        
+        //Creates orders table
         private void CreateOrdersTable(SQLiteConnection connection)
         {
             string createTableSql = "CREATE TABLE Orders (Id INTEGER PRIMARY KEY, CustomerId INTEGER, ProductId INTEGER, ProductName TEXT, Price INTEGER, PurchaseTime DATE)";
             SQLiteCommand createTableCmd = new SQLiteCommand(createTableSql, connection);
             createTableCmd.ExecuteNonQuery();
         }
+        
+        //inserts product
         private void InsertProduct(Product product)
         {
             SQLiteConnection connection = new SQLiteConnection("Data Source=" + _dbFilePath);
@@ -88,6 +97,8 @@ namespace WebShopCleanCode
             product.Id = (int)connection.LastInsertRowId;
             connection.Close();
         }
+        
+        //inserts customer
         public void InsertCustomer(Customer customer)
         {
             SQLiteConnection connection = new SQLiteConnection("Data Source=" + _dbFilePath);
@@ -108,6 +119,9 @@ namespace WebShopCleanCode
             customer.Id = (int)connection.LastInsertRowId;
             connection.Close();
         }
+        
+        
+        //inserts order
         public void InsertOrder(Order order, Customer customer, Product product)
         {
             SQLiteConnection connection = new SQLiteConnection("Data Source=" + _dbFilePath);
@@ -125,6 +139,8 @@ namespace WebShopCleanCode
             connection.Close();
         }
 
+        
+        //Gets each customer from database and adds it to the customer list 
         private void GetCustomersFromDb()
         {
             string query = $"SELECT COUNT(*) FROM {_customers}";
@@ -158,6 +174,8 @@ namespace WebShopCleanCode
             }
         }
 
+        
+        //Gets each product from database and adds it to the product list 
         private void GetProductsFromDb()
         {
             string query = $"SELECT COUNT(*) FROM {_products}";
@@ -182,7 +200,9 @@ namespace WebShopCleanCode
                 }   
             }
         }
-
+        
+        
+        //Gets each order from database and adds it to the order list 
         private void GetOrdersFromDb()
         {
             string query = $"SELECT COUNT(*) FROM {_orders}";
@@ -211,6 +231,9 @@ namespace WebShopCleanCode
             }
         }
 
+        
+        //checks every customer id column in the orders table and id column of the customers table to see if they match.
+        //If they do that order is added to that customers orders list.
         private void SetOrdersToCustomers()
         {
             foreach (var customer in _customersInDatabase)
@@ -222,6 +245,8 @@ namespace WebShopCleanCode
             }
         }
 
+        
+        //Updates a column that has a integer value in any you want table. 
         public void UpdateIntegerColumn(string table, string column, int value, int id)
         {
             var query = "UPDATE " + table + " SET " + column + " = @value WHERE id = @id";
@@ -235,11 +260,14 @@ namespace WebShopCleanCode
             command.ExecuteNonQuery();
         }
 
+        
+        //Returns product list
         public List<Product> GetProducts()
         {
             return _productsInDatabase;
         }
         
+        //Returns customer list
         public List<Customer?> GetCustomers()
         {
             return _customersInDatabase;
