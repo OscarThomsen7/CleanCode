@@ -1,4 +1,5 @@
 ﻿using WebShopCleanCode.Builder.BuildMenu;
+using WebShopCleanCode.Command;
 using WebShopCleanCode.State.StateOptions;
 
 namespace WebShopCleanCode.State.States;
@@ -11,11 +12,11 @@ public class MainState : MenuTemplate
     {
         _context = context;
         IOption option = new MainStateOptions(context);
-        var options = new List<ExecuteMethod>()
+        var options = new List<CommandExecutor>()
         {
-            () => option.Option1(),
-            () => option.Option2(),
-            () => option.Option3(),
+            new(() => option.Option1()),
+            new(() => option.Option2()),
+            new(() => option.Option3()),
         };
         SetMethodListAndMenuType(options, _menuDirector.BuildMainMenu(context.GetLoggedInStatus()));
     }

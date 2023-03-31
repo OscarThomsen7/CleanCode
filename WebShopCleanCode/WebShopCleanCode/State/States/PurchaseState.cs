@@ -1,4 +1,5 @@
 ﻿using WebShopCleanCode.Builder.BuildMenu;
+using WebShopCleanCode.Command;
 using WebShopCleanCode.State.StateOptions;
 
 namespace WebShopCleanCode.State.States;
@@ -13,9 +14,9 @@ public class PurchaseState : MenuTemplate
         _context = context;
         _menu = _menuDirector.BuildPurchaseMenu(_context.GetProductCount());
         IOption option = new PurchaseStateOptions(context);
-        var options = new List<ExecuteMethod>()
+        var options = new List<CommandExecutor>()
         {
-            () => option.Option1()
+            new( () => option.Option1())
         };
         SetMethodListAndMenuType(options, _menu);
     }

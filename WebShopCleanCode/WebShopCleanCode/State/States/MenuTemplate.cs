@@ -1,4 +1,5 @@
 ﻿using WebShopCleanCode.Builder.BuildMenu;
+using WebShopCleanCode.Command;
 
 namespace WebShopCleanCode.State.States;
 
@@ -9,18 +10,19 @@ public class MenuTemplate
 
     protected delegate void ExecuteMethod();
     private ExecuteMethod _executeMethod;
-    private List<ExecuteMethod> _options;
+    private List<CommandExecutor> _options;
+    private CommandExecutor _commandExecutor;
 
     protected MenuTemplate(Context context)
     {
         _context = context;
     }
 
-    protected void SetMethodListAndMenuType(List<ExecuteMethod> methods, Menu menu)
+    protected void SetMethodListAndMenuType(List<CommandExecutor> methods, Menu menu)
     {
         _menu = menu;
         _options = methods;
-        _executeMethod = _options[0];
+        _commandExecutor = _options[0];
     }
 
     public virtual void ShowMenu()
@@ -30,7 +32,7 @@ public class MenuTemplate
 
     public void Ok()
     {
-        _executeMethod();
+        _commandExecutor.ExecuteMethod();
     }
 
     public virtual void Back()
@@ -49,7 +51,7 @@ public class MenuTemplate
         if (_context.GetCurrentChoice() > 1)
         {
             _context.SetCurrentChoice(_context.GetCurrentChoice() - 1);
-            _executeMethod = _options[_context.GetCurrentChoice() - 1];
+            _commandExecutor = _options[_context.GetCurrentChoice() - 1];
             return;
         }
         _context.Message("That is not an applicable option.");
@@ -60,7 +62,7 @@ public class MenuTemplate
         if (_context.GetCurrentChoice() < _menu.AmountOfOptions)
         {
             _context.SetCurrentChoice(_context.GetCurrentChoice() + 1);
-            _executeMethod = _options[_context.GetCurrentChoice() - 1];
+            _commandExecutor = _options[_context.GetCurrentChoice() - 1];
             return;
         }
         _context.Message("That is not an applicable option.");
