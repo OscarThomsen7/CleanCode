@@ -167,26 +167,35 @@ public class Context
         Message("Please write a number next time.");
     }
 
+    
+    //Gets logged in customer
     public Customer? GetCurrentCustomer()
     {
         return _currentWebShopState.CurrentCustomer;
     }
-
+    
+    //Sets the current choice
     public void SetCurrentChoice(int position)
     {
         _currentWebShopState.CurrentChoice = position;
     }
+    
+    //Sets the current choice
     public int GetCurrentChoice()
     {
         return _currentWebShopState.CurrentChoice;
     }
 
+    
+    //adds/registers new customer 
     public void RegisterCustomer()
     { 
         _currentWebShopState.RegisterCustomer();
         ChangeState(new MainState(this));
     }
     
+    
+    //Change current context/state
     public void ChangeState(MenuTemplate menu)
     {
         _currentMenuState = menu;
@@ -197,29 +206,36 @@ public class Context
         Console.WriteLine($"\n{message}\n");
     }
 
+    //get logged in property
     public bool GetLoggedInStatus()
     {
         return _currentWebShopState.IsLoggedIn;
     }
 
-
+    //executes current command
     private void OnOk()
     {
         _currentMenuState.Ok();
         SetCurrentChoice(1);
     }
 
+    
+    //Executes current back method
     private void OnBack()
     {
         _currentMenuState.Back();
     }
 
-    public void ShowMenu()
+    
+    //Executes current showmenu method
+    private void ShowMenu()
     {
         _currentMenuState.ShowMenu();
         CustomerCheck();
     }
 
+    
+    //Checks if a customer is logged in to print what customer is logged in at the moment
     private void CustomerCheck()
     {
         Console.WriteLine("Your buttons are Left, Right, OK, Back and Quit.");
@@ -232,6 +248,8 @@ public class Context
         
     }
     
+    
+    //Checks if parameter equals a key in the commands dictionary. If so, it executes the method connected to that key
     private void MoveInMenu(string choice)
     {
         foreach (var item in _inputDictionary)
@@ -245,6 +263,8 @@ public class Context
         Console.WriteLine("That is not an applicable option.");
     }
 
+    
+    //The method that runs entire application
     public void Run()
     {
         Console.WriteLine("Welcome to the WebShop!");
@@ -256,16 +276,20 @@ public class Context
         }
     }
 
+    
+    //Executes current quit method
     private void Quit()
     {
         _currentMenuState.Quit();
     }
-
+    
+    //Executes Moveleft quit method
     private void MoveLeft()
     {
         _currentMenuState.MoveLeft();
     }
 
+    //Executes current Moveright method
     private void MoveRight()
     {
         _currentMenuState.MoveRight();
