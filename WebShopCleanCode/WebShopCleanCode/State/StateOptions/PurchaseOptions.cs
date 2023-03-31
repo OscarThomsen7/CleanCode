@@ -2,12 +2,12 @@
 
 namespace WebShopCleanCode.State.StateOptions;
 
-public class PurchaseStateOptions : IOption
+public class PurchaseOptions : IOption
 {
     //This class is the purchase menus options
     private Context _context;
 
-    public PurchaseStateOptions(Context context)
+    public PurchaseOptions(Context context)
     {
         _context = context;
     }

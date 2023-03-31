@@ -18,5 +18,8 @@ public class WaresState : MenuTemplate
             new( () => option.Option4())
         };
         SetMethodListAndMenuType(options, _menuDirector.BuildWaresMenu(context.GetLoggedInStatus()));
+        
+        //Wares menu that is used when it is set to the current state/context
+        //Contains a list of Commands to be executed. The commands are the option methods from the WaresOptions Class
     }
 }

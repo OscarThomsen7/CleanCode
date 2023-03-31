@@ -9,7 +9,7 @@ public class SortState : MenuTemplate
     private readonly MenuDirector _menuDirector = new();
     public SortState(Context context) : base(context)
     {
-        IOption option = new SortStateOptions(context);
+        IOption option = new SortOptions(context);
         var options = new List<CommandExecutor>()
         {
             new( () => option.Option1()),
@@ -19,4 +19,7 @@ public class SortState : MenuTemplate
         };
         SetMethodListAndMenuType(options, _menuDirector.BuildSortMenu());
     }
+    
+    //Sort menu that is used when it is set to the current state/context
+    //Contains a list of Commands to be executed. The commands are the option methods from the SortOptions Class
 }

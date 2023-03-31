@@ -9,7 +9,7 @@ public class CustomerState : MenuTemplate
     private readonly MenuDirector _menuDirector = new();
     public CustomerState(Context context) : base(context)
     {
-        IOption option = new CustomerStateOptions(context);
+        IOption option = new CustomerOptions(context);
         var options = new List<CommandExecutor>()
         {
             new( () => option.Option1()),
@@ -19,4 +19,7 @@ public class CustomerState : MenuTemplate
         };
         SetMethodListAndMenuType(options, _menuDirector.BuildCustomerMenu());
     }
+    
+    //Customer menu that is used when it is set to the current state/context
+    //Contains a list of Commands to be executed. The commands are the option methods from the CustomerOptions Class
 }

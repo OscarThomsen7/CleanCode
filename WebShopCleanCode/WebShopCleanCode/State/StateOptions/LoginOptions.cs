@@ -3,12 +3,12 @@ using WebShopCleanCode.State.States;
 
 namespace WebShopCleanCode.State.StateOptions;
 
-public class LoginStateOptions : IOption
+public class LoginOptions : IOption
 {
     //This class is the login menus options 
     private Context _context;
 
-    public LoginStateOptions(Context context)
+    public LoginOptions(Context context)
     {
         _context = context;
     }

@@ -3,7 +3,7 @@ using WebShopCleanCode.State.States;
 
 namespace WebShopCleanCode.State.StateOptions;
 
-public class SortStateOptions :IOption
+public class SortOptions :IOption
 {
     
     //This class is the sort menus options
@@ -12,7 +12,7 @@ public class SortStateOptions :IOption
     private readonly List<Product> _products;
     private QuickSort _quickSort = new();
 
-    public SortStateOptions(Context context)
+    public SortOptions(Context context)
     {
         _context = context;
         _length = _context.GetProductCount();

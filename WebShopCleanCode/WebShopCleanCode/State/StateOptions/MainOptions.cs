@@ -2,11 +2,11 @@
 
 namespace WebShopCleanCode.State.StateOptions;
 
-public class MainStateOptions : IOption
+public class MainOptions : IOption
 {
     //This class is the main menus options
     private readonly Context _context;
-    public MainStateOptions(Context context) 
+    public MainOptions(Context context) 
     {
         _context = context;
     }

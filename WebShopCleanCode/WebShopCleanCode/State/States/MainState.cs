@@ -11,7 +11,7 @@ public class MainState : MenuTemplate
     public MainState(Context context) : base(context)
     {
         _context = context;
-        IOption option = new MainStateOptions(context);
+        IOption option = new MainOptions(context);
         var options = new List<CommandExecutor>()
         {
             new(() => option.Option1()),
@@ -21,9 +21,15 @@ public class MainState : MenuTemplate
         SetMethodListAndMenuType(options, _menuDirector.BuildMainMenu(context.GetLoggedInStatus()));
     }
 
+    
+    //Overrides the back method from MenuTemplate Class because it has a different implementation
     public override void Back()
     {
         Console.WriteLine("You're already on the main menu.");
         _context.ChangeState(new MainState(_context));
     }
+    
+    
+    //Main menu that is used when it is set to the current state/context
+    //Contains a list of Commands to be executed. The commands are the option methods from the MainOptions Class
 }
