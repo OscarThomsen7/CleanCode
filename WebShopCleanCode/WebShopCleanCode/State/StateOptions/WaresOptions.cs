@@ -37,7 +37,7 @@ public class WaresOptions : IOption
             _context.ChangeState(new LoginState(_context));
             return;
         }
-        _context.Message($"{_context.GetCurrentCustomer()!.Username} logged out.");
+        _context.Message($"{_context.GetCurrentCustomer().Username} logged out.");
         _context.LogOut();
     }
 }

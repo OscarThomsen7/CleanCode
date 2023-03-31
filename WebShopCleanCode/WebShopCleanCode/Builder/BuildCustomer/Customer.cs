@@ -27,11 +27,7 @@ public class Customer
         Orders = new List<Order>();
         Funds = funds;
     }
-
-    public Customer()
-    {
-        
-    }
+    
     
     public bool CanAfford(int price)
     {

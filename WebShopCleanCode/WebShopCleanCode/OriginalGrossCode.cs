@@ -688,7 +688,7 @@ public class OriginalGrossCode
                                 {
                                     currentCustomer.Funds -= product.Price;
                                     product.NrInStock--;
-                                    currentCustomer.Orders.Add(new Order(product.Name, product.Price, DateTime.Now));
+                                    currentCustomer.Orders.Add(new Order(0, 0,product.Name, product.Price, DateTime.Now));
                                     Console.WriteLine();
                                     Console.WriteLine("Successfully bought " + product.Name);
                                     Console.WriteLine();

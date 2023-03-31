@@ -6,18 +6,16 @@ namespace WebShopCleanCode.State;
 
 public class Context
 {
+    public Database Db { get;}
     private MenuTemplate _currentMenuState;
-    private Database _database;
     private readonly WebShop _currentWebShopState;
     private Dictionary<string, CommandExecutor> _inputDictionary = new();
 
     public Context()
     {
-        _database = new Database();
         _currentWebShopState = new WebShop();
         _currentMenuState = new MainState(this);
-        _currentWebShopState.Products = _database.GetProducts();
-        _currentWebShopState.Customers = _database.GetCustomers();
+        Db = _currentWebShopState.Database;
         SetDictionary();
     }
     private void SetDictionary()
@@ -126,6 +124,7 @@ public class Context
                 return;
             }
             GetCurrentCustomer()!.Funds += amount;
+            Db.UpdateIntegerColumn("Customers", "Funds", amount, GetCurrentCustomer().Id);
             Message($"{amount} added to your profile.");
             return;
         }
@@ -148,10 +147,10 @@ public class Context
 
     public void RegisterCustomer()
     { 
-        _database.InsertCustomer(_currentWebShopState.RegisterCustomer());
+        _currentWebShopState.RegisterCustomer();
         ChangeState(new MainState(this));
     }
-
+    
     public void ChangeState(MenuTemplate menu)
     {
         _currentMenuState = menu;

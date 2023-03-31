@@ -6,9 +6,8 @@
         public string Name { get; set; }
         public int Price { get; set; }
         public int NrInStock { get; set; }
-        public Product(string name, int price, int nrInStock)// int id,
+        public Product(string name, int price, int nrInStock)
         {
-            //Id = id;
             Name = name;
             Price = price;
             NrInStock = nrInStock;

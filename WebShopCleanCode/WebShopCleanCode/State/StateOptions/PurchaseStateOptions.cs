@@ -12,15 +12,19 @@ public class PurchaseStateOptions : IOption
     }
     public void Option1()
     {
-        Customer? currentCustomer = _context.GetCurrentCustomer();
+        Customer currentCustomer = _context.GetCurrentCustomer();
         Product product = _context.GetProducts()[_context.GetCurrentChoice() - 1];
         if (product.InStock())
         {
             if (currentCustomer.CanAfford(product.Price))
             {
                 currentCustomer.Funds -= product.Price;
-                product.NrInStock--;
-                currentCustomer.Orders.Add(new Order(product.Name, product.Price, DateTime.Now));
+                _context.Db.UpdateIntegerColumn("Customers", "Funds", currentCustomer.Funds, currentCustomer.Id);
+                product.NrInStock -= 1;
+                _context.Db.UpdateIntegerColumn("Products", "NumberInStock", product.NrInStock, product.Id);
+                Order order = new Order(currentCustomer.Id, product.Id, product.Name, product.Price, DateTime.Now);
+                currentCustomer.Orders.Add(order);
+                _context.Db.InsertOrder(order, currentCustomer, product);
                 _context.Message($"Successfully bought {product.Name}");
                 return;
             }

@@ -4,7 +4,7 @@ namespace WebShopCleanCode;
 
 public class WebShop
 {
-    //private readonly Database _database = new();
+    public Database Database { get; set; }
     private readonly CustomerBuilder _customerBuilder = new();
     public List<Product> Products { get; set; }
     public List<Customer?> Customers { get; set; }
@@ -21,19 +21,19 @@ public class WebShop
 
     public WebShop()
     {
-        //_database.CreateDatabase();
-        //Products = _database.GetProducts();
-        //Customers = _database.GetCustomers();
+        Database = new Database();
+        Products = Database.GetProducts();
+        Customers = Database.GetCustomers();
     }
     
-    public Customer RegisterCustomer()
+    public void RegisterCustomer()
     {
         Console.WriteLine("Please write your username.");
         var input = Console.ReadLine()!;
         if (Customers.Any(customer => customer!.Username.Equals(input)))
         {
             Console.WriteLine("\nUsername already exists.\n"); //Fixa med att lägga till kund till db i context Registercustomer
-            return null;
+            return;
         }
         _customerBuilder.SetUsername(input);
         _customerBuilder.SetPassword(RegisterProperty("a password", "password.", "Please actually write something."));
@@ -48,8 +48,8 @@ public class WebShop
         Customers.Add(newCustomer);
         CurrentCustomer = newCustomer;
         IsLoggedIn = true;
-        Console.WriteLine($"\n{newCustomer!.Username} successfully added and is now logged in.\n");
-        return newCustomer;
+        Database.InsertCustomer(newCustomer);
+        Console.WriteLine($"\n{CurrentCustomer.Username} successfully added and is now logged in.\n");
     }
     private void SetDictionary(string instruction, string message)
     {
