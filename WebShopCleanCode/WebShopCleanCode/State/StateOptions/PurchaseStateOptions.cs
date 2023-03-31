@@ -4,12 +4,17 @@ namespace WebShopCleanCode.State.StateOptions;
 
 public class PurchaseStateOptions : IOption
 {
+    //This class is the purchase menus options
     private Context _context;
 
     public PurchaseStateOptions(Context context)
     {
         _context = context;
     }
+    
+    //Checks if the chosen product is in stock and if current customer can afford to buy it. If not, it does not let the customer buy it.
+    //Otherwise it lets the customer buy, decrements customer funds and stock of the product and updates the database.
+    //Then creates a new order with all the info collected and sends it to the db and adds it to current customers orders list
     public void Option1()
     {
         Customer currentCustomer = _context.GetCurrentCustomer();
@@ -33,19 +38,19 @@ public class PurchaseStateOptions : IOption
         }
         _context.Message("Not in stock.");
     }
-
+    
+    //Not used
     public void Option2()
     {
-        throw new NotImplementedException();
     }
 
+    //Not used
     public void Option3()
     {
-        throw new NotImplementedException();
     }
 
+    //Not used
     public void Option4()
     {
-        throw new NotImplementedException();
     }
 }
