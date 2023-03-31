@@ -2,7 +2,7 @@
 
 public class Customer
 {
-    public int Id { get; set; } = 0;
+    public int Id { get; set; }
     public string Username { get; }
     public string Password { get; }
     public string FirstName { get; }
@@ -27,12 +27,8 @@ public class Customer
         Orders = new List<Order>();
         Funds = funds;
     }
-
-    public Customer()
-    {
-        
-    }
-
+    
+    
     public bool CanAfford(int price)
     {
         return Funds >= price;
@@ -46,7 +42,7 @@ public class Customer
         }
     }
         
-    public void PrintInfo()
+    public void PrintCustomerInfo()
     {
         Console.WriteLine();
         LogProperty("Username:", Username);
@@ -66,7 +62,7 @@ public class Customer
         Console.WriteLine();
         foreach (Order order in Orders)
         {
-            order.PrintInfo();
+            order.PrintOrderInfo();
         }
         Console.WriteLine();
     }
