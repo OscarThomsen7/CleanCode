@@ -6,7 +6,6 @@ namespace WebShopCleanCode
 {
     public class Database
     {
-
         private string _dbFilePath = "Database.sqlite";
         private string _customers = "Customers";
         private string _orders = "Orders";
