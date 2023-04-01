@@ -1,5 +1,7 @@
 ﻿using WebShopCleanCode.Builder.BuildCustomer;
+using WebShopCleanCode.Builder.BuildMenu;
 using WebShopCleanCode.Command;
+using WebShopCleanCode.State.StateOptions;
 using WebShopCleanCode.State.States;
 
 namespace WebShopCleanCode.State;
@@ -10,6 +12,7 @@ public class Context
     //different methods will be executed depending oon what state/menu the application is set to.
     private MenuTemplate _currentMenuState;
     private readonly Dictionary<string, CommandExecutor> _commandDictionary = new();
+    private MenuDirector _menuDirector = new();
     public Database Database { get;} = new();
     private readonly CustomerBuilder _customerBuilder = new();
     public List<Product> Products { get;}
@@ -25,7 +28,7 @@ public class Context
 
     public Context()
     {
-        _currentMenuState = new MainState(this);
+        _currentMenuState = new ContextMenu(this, new MainOptions(this),_menuDirector.BuildMainMenu(IsLoggedIn));
         Products = Database.GetProducts();
         Customers = Database.GetCustomers();
         SetCommands();
@@ -54,8 +57,7 @@ public class Context
         IsLoggedIn = false;
         Password = "";
         Username = "";
-        ChangeState(new MainState(this));
-    }
+        ChangeState(new ContextMenu(this, new MainOptions(this), _menuDirector.BuildMainMenu(IsLoggedIn)));    }
     
     //Sets username property to be used for login attempt
     public void SetUserName()
@@ -255,8 +257,7 @@ public class Context
         IsLoggedIn = true;
         Database.InsertCustomer(newCustomer);
         Console.WriteLine($"\n{CurrentCustomer.Username} successfully added and is now logged in.\n");
-        ChangeState(new MainState(this));
-    }
+        ChangeState(new ContextMenu(this, new MainOptions(this), _menuDirector.BuildMainMenu(IsLoggedIn)));    }
     
     //Dictionary to execute a delegate if the input matches the key.
     private void SetRegisterDictionary(string instruction, string message)

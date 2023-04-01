@@ -1,4 +1,6 @@
-﻿namespace WebShopCleanCode.State.StateOptions;
+﻿using WebShopCleanCode.Command;
+
+namespace WebShopCleanCode.State.StateOptions;
 
 public interface IOption
 {
@@ -8,4 +10,5 @@ public interface IOption
     void Option2();
     void Option3();
     void Option4();
+    List<CommandExecutor> GetOptions();
 }

@@ -1,4 +1,5 @@
 ﻿using WebShopCleanCode.Builder.BuildCustomer;
+using WebShopCleanCode.Command;
 
 namespace WebShopCleanCode.State.StateOptions;
 
@@ -54,5 +55,13 @@ public class PurchaseOptions : IOption
     //Not used
     public void Option4()
     {
+    }
+
+    public List<CommandExecutor> GetOptions()
+    {
+        return new List<CommandExecutor>
+        {
+            new(() => Option1())
+        };
     }
 }

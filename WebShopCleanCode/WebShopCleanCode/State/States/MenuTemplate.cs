@@ -1,23 +1,32 @@
 ﻿using WebShopCleanCode.Builder.BuildMenu;
 using WebShopCleanCode.Command;
+using WebShopCleanCode.State.StateOptions;
 
 namespace WebShopCleanCode.State.States;
 
 public class MenuTemplate
 {
     //This class is the parent class to all menus with already implemented methods that can be overriden if needed. Easily extendable.
-    
+
     private readonly Context _context;
     private Menu _menu;
+    private MenuDirector _menuDirector = new();
     private List<CommandExecutor> _options;
     private CommandExecutor _commandExecutor;
 
+    private delegate void BackOverride();
+    private BackOverride _backOverride;
+    private delegate void LeftOverride();
+    private delegate void RightOverride();
+    private LeftOverride _leftOverride;
+    private RightOverride _rightOverride;
+    
     protected MenuTemplate(Context context)
     {
         _context = context;
     }
 
-    
+
     //Takes parameters from the menu that is the current state/context and sets commands and menu properties to the current menu passed.
     protected void SetMethodListAndMenuType(List<CommandExecutor> methods, Menu menu)
     {
@@ -26,28 +35,33 @@ public class MenuTemplate
         _commandExecutor = _options[0];
     }
 
-    
+
     //Prints the current menu
-    public virtual void ShowMenu()
+    public void ShowMenu()
     {
+        if (_menu.Name.Equals("Purchase menu"))
+        {
+            _context.OutputProducts();
+        }
         _menu.DisplayMenu(_context.CurrentChoice);
     }
 
-    
+
     //Execute the current chosen method
     public void Ok()
     {
         _commandExecutor.ExecuteMethod();
     }
 
-    
+
     //Changes state/context back to main menu
-    public virtual void Back()
+    public void Back()
     {
-        _context.ChangeState(new MainState(_context));
+        CheckBack();
+        _backOverride();
     }
 
-    
+
     //Quit the application
     public void Quit()
     {
@@ -55,31 +69,98 @@ public class MenuTemplate
         Environment.Exit(0);
     }
 
-    
+
     //Moves left in the option choices if the cursor is not already in the leftmost position.
     //Also sets the commandexecutor to the new option.  
     public virtual void MoveLeft()
     {
-        if (_context.CurrentChoice > 1)
-        {
-            _context.SetCurrentChoice(_context.CurrentChoice - 1);
-            _commandExecutor = _options[_context.CurrentChoice - 1];
-            return;
-        }
-        _context.Message("That is not an applicable option.");
+        CheckLeft();
+        _leftOverride();
     }
-    
-    
+
+
     //Moves right in the option choices if the cursor is not already in the rightmost position.
     //Also sets the commandexecutor to the new option. 
     public virtual void MoveRight()
     {
-        if (_context.CurrentChoice < _menu.AmountOfOptions)
+        CheckRight();
+        _rightOverride();
+    }
+
+    private void CheckBack()
+    {
+        Dictionary<string, BackOverride> dictionary = new Dictionary<string, BackOverride>();
+        dictionary.Add("Main menu", () => { Console.WriteLine("You're already on the main menu."); });
+        dictionary.Add("Purchase menu",
+            () =>
+            {
+                _context.ChangeState(new ContextMenu(_context, new WaresOptions(_context),
+                    _menuDirector.BuildWaresMenu(_context.IsLoggedIn)));
+            });
+        foreach (var item in dictionary)
         {
-            _context.SetCurrentChoice(_context.CurrentChoice + 1);
-            _commandExecutor = _options[_context.CurrentChoice - 1];
+            if (_menu.Name.Equals(item.Key))
+            {
+                _backOverride = item.Value;
+                return;
+            }
+            _backOverride = () => _context.ChangeState(new ContextMenu(_context, new MainOptions(_context),
+                _menuDirector.BuildMainMenu(_context.IsLoggedIn)));
+        }
+    }
+
+    private void CheckLeft()
+    {
+        if (_menu.Name.Equals("Purchase menu"))
+        {
+            _leftOverride = () =>
+            {
+                if (_context.CurrentChoice > 1)
+                {
+                    _context.SetCurrentChoice(_context.CurrentChoice - 1);
+                    return;
+                }
+                _context.Message("That is not an applicable option.");
+                
+            };
             return;
         }
-        _context.Message("That is not an applicable option.");
+        _leftOverride = () =>
+        {
+            if (_context.CurrentChoice > 1)
+            {
+                _context.SetCurrentChoice(_context.CurrentChoice - 1);
+                _commandExecutor = _options[_context.CurrentChoice - 1];
+                return;
+            }
+            _context.Message("That is not an applicable option.");
+        };
+    }
+    
+    private void CheckRight()
+    {
+        if (_menu.Name.Equals("Purchase menu"))
+        {
+            _rightOverride = () =>
+            {
+                if (_context.CurrentChoice < _menu.AmountOfOptions)
+                {
+                    _context.SetCurrentChoice(_context.CurrentChoice + 1);
+                    return;
+                }
+                _context.Message("That is not an applicable option.");
+            };
+            return;
+        }
+        _rightOverride = () =>
+        {
+            if (_context.CurrentChoice < _menu.AmountOfOptions)
+            {
+                _context.SetCurrentChoice(_context.CurrentChoice + 1);
+                _commandExecutor = _options[_context.CurrentChoice - 1];
+                return;
+            }
+            _context.Message("That is not an applicable option.");
+        };
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace WebShopCleanCode.State.StateOptions;
+﻿using WebShopCleanCode.Command;
+
+namespace WebShopCleanCode.State.StateOptions;
 
 public class CustomerOptions : IOption
 {
@@ -33,5 +35,15 @@ public class CustomerOptions : IOption
     //Not used
     public void Option4()
     {
+    }
+
+    public List<CommandExecutor> GetOptions()
+    {
+        return new List<CommandExecutor>
+        {
+            new(() => Option1()),
+            new(() => Option2()),
+            new(() => Option3())
+        };
     }
 }
