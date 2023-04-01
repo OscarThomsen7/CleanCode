@@ -9,7 +9,7 @@ public class Context
     //This class is what runs the whole application.
     //different methods will be executed depending oon what state/menu the application is set to.
     private MenuTemplate _currentMenuState;
-    private Dictionary<string, CommandExecutor> _commandDictionary = new();
+    private readonly Dictionary<string, CommandExecutor> _commandDictionary = new();
     public Database Database { get;} = new();
     private readonly CustomerBuilder _customerBuilder = new();
     public List<Product> Products { get;}
@@ -28,11 +28,11 @@ public class Context
         _currentMenuState = new MainState(this);
         Products = Database.GetProducts();
         Customers = Database.GetCustomers();
-        SetDictionary();
+        SetCommands();
     }
     
     //Create a dictionary of commands to get rid of the need for nested ifs or switch cases when taking user input.
-    private void SetDictionary()
+    private void SetCommands()
     {
         _commandDictionary.Add("left", new CommandExecutor(MoveLeft));
         _commandDictionary.Add("l", new CommandExecutor(MoveLeft));
@@ -263,7 +263,6 @@ public class Context
     {
         _inputDictionary.Add("y", () => OnYes(instruction, message));
         _inputDictionary.Add("n", () => "");
-        //_inputDictionary.Add("q", (() => ChangeState(new LoginState(this))));
     }
     
     //Asks user if they want to add each property or not. Loops through inputDictionary to check if input equals a key.
@@ -276,7 +275,7 @@ public class Context
         
         while (true)
         {
-            Console.WriteLine($"Do you want {question}? y/n. Q to exit");
+            Console.WriteLine($"Do you want {question}? y/n.");
             var choice = Console.ReadLine()!;
 
             foreach (var item in _inputDictionary.Where(item => choice.ToLower().Equals(item.Key.ToLower())))
