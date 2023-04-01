@@ -30,7 +30,7 @@ public class MenuTemplate
     //Prints the current menu
     public virtual void ShowMenu()
     {
-        _menu.DisplayMenu(_context.GetCurrentChoice());
+        _menu.DisplayMenu(_context.CurrentChoice);
     }
 
     
@@ -60,10 +60,10 @@ public class MenuTemplate
     //Also sets the commandexecutor to the new option.  
     public virtual void MoveLeft()
     {
-        if (_context.GetCurrentChoice() > 1)
+        if (_context.CurrentChoice > 1)
         {
-            _context.SetCurrentChoice(_context.GetCurrentChoice() - 1);
-            _commandExecutor = _options[_context.GetCurrentChoice() - 1];
+            _context.SetCurrentChoice(_context.CurrentChoice - 1);
+            _commandExecutor = _options[_context.CurrentChoice - 1];
             return;
         }
         _context.Message("That is not an applicable option.");
@@ -74,10 +74,10 @@ public class MenuTemplate
     //Also sets the commandexecutor to the new option. 
     public virtual void MoveRight()
     {
-        if (_context.GetCurrentChoice() < _menu.AmountOfOptions)
+        if (_context.CurrentChoice < _menu.AmountOfOptions)
         {
-            _context.SetCurrentChoice(_context.GetCurrentChoice() + 1);
-            _commandExecutor = _options[_context.GetCurrentChoice() - 1];
+            _context.SetCurrentChoice(_context.CurrentChoice + 1);
+            _commandExecutor = _options[_context.CurrentChoice - 1];
             return;
         }
         _context.Message("That is not an applicable option.");

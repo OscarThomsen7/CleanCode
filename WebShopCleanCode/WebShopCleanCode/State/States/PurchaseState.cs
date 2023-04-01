@@ -15,7 +15,7 @@ public class PurchaseState : MenuTemplate
     public PurchaseState(Context context) : base(context)
     {
         _context = context;
-        _menu = _menuDirector.BuildPurchaseMenu(_context.GetProductCount());
+        _menu = _menuDirector.BuildPurchaseMenu(_context.Products.Count);
         IOption option = new PurchaseOptions(context);
         var options = new List<CommandExecutor>()
         {
@@ -36,9 +36,9 @@ public class PurchaseState : MenuTemplate
     //Only has one command to be executed so it only changes the cursor position to choose different products
     public override void MoveLeft()
     {
-        if (_context.GetCurrentChoice() > 1)
+        if (_context.CurrentChoice > 1)
         {
-            _context.SetCurrentChoice(_context.GetCurrentChoice() - 1);
+            _context.SetCurrentChoice(_context.CurrentChoice - 1);
             return;
         }
         _context.Message("That is not an applicable option.");
@@ -48,9 +48,9 @@ public class PurchaseState : MenuTemplate
     //Only has one command to be executed so it only changes the cursor position to choose different products
     public override void MoveRight()
     {
-        if (_context.GetCurrentChoice() < _menu.AmountOfOptions)
+        if (_context.CurrentChoice < _menu.AmountOfOptions)
         {
-            _context.SetCurrentChoice(_context.GetCurrentChoice() + 1);
+            _context.SetCurrentChoice(_context.CurrentChoice + 1);
             return;
         }
         _context.Message("That is not an applicable option.");
@@ -62,6 +62,6 @@ public class PurchaseState : MenuTemplate
     public override void ShowMenu()
     {
         _context.OutputProducts();
-        _menu.DisplayMenu(_context.GetCurrentChoice());
+        _menu.DisplayMenu(_context.CurrentChoice);
     }
 }

@@ -23,7 +23,7 @@ public class WaresOptions : IOption
     //Checks if a customer is logged in. If so, changes state/context to the purchase menu
     public void Option2()
     {
-        if (_context.GetLoggedInStatus())
+        if (_context.IsLoggedIn)
         {
             _context.ChangeState(new PurchaseState(_context));
             return;
@@ -42,12 +42,12 @@ public class WaresOptions : IOption
     //Checks if customer is logged in or not. If not it changes state/context to the sort menu. Otherwise it logs the customer out
     public void Option4()
     {
-        if (_context.GetLoggedInStatus() == false)
+        if (_context.IsLoggedIn == false)
         {
             _context.ChangeState(new LoginState(_context));
             return;
         }
-        _context.Message($"{_context.GetCurrentCustomer().Username} logged out.");
+        _context.Message($"{_context.CurrentCustomer.Username} logged out.");
         _context.LogOut();
     }
 }

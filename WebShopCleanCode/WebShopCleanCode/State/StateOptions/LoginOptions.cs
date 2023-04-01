@@ -29,22 +29,22 @@ public class LoginOptions : IOption
     //otherwise it logs in to the customer with matched password and username.
     public void Option3()
     {
-        if (_context.GetUserName().Equals("") || _context.GetPassWord().Equals(""))
+        if (_context.Username.Equals("") || _context.Password.Equals(""))
         {
             _context.Message("Incomplete data.");
             return;
         }
-        foreach (Customer? customer in _context.GetCustomers())
+        foreach (Customer? customer in _context.Customers)
         {
-            if (_context.GetUserName().Equals(customer.Username) && _context.GetPassWord().Equals(customer.Password))
+            if (_context.Username.Equals(customer.Username) && _context.Password.Equals(customer.Password))
             {
                 _context.Message($"{ customer.Username} logged in.");
                 _context.SetCurrentCustomer(customer);
                 _context.ChangeState(new MainState(_context));
                 return;
             }
-            _context.Message("Invalid credentials.");
         }
+        _context.Message("Invalid credentials.");
     }
     
     //Creates a new customer, logs in to it and saves it to the database.

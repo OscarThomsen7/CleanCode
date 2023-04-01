@@ -20,7 +20,7 @@ public class MainOptions : IOption
     //If a customer is logged in it changes state/context to the customer menu
     public void Option2()
     {
-        if (_context.GetLoggedInStatus())
+        if (_context.IsLoggedIn)
         {
             _context.ChangeState(new CustomerState(_context));
             return;
@@ -31,12 +31,12 @@ public class MainOptions : IOption
     //If a customer is not logged in it changes state/context to the login menu. Otherwise it logs the customer out.
     public void Option3()
     {
-        if (_context.GetLoggedInStatus() == false)
+        if (_context.IsLoggedIn == false)
         {
             _context.ChangeState(new LoginState(_context));
             return;
         }
-        _context.Message($"{_context.GetCurrentCustomer().Username} logged out.");
+        _context.Message($"{_context.CurrentCustomer.Username} logged out.");
         _context.LogOut();
     }
 

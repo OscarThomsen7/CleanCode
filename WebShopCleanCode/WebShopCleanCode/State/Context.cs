@@ -8,115 +8,93 @@ public class Context
 {
     //This class is what runs the whole application.
     //different methods will be executed depending oon what state/menu the application is set to.
-    public Database Db { get;}
     private MenuTemplate _currentMenuState;
-    private readonly WebShop _currentWebShopState;
-    private Dictionary<string, CommandExecutor> _inputDictionary = new();
+    private Dictionary<string, CommandExecutor> _commandDictionary = new();
+    public Database Database { get;} = new();
+    private readonly CustomerBuilder _customerBuilder = new();
+    public List<Product> Products { get;}
+    public List<Customer?> Customers { get;}
+    public Customer? CurrentCustomer { get; set; }
+    public bool IsLoggedIn { get; set; }
+    public int CurrentChoice { get; set; } = 1;
+    public string Username { get; set; } = "";
+    public string Password { get; set; } = "";
+    private delegate string ExecuteMethod();
+    private ExecuteMethod _executeMethod;
+    private readonly Dictionary<string, ExecuteMethod> _inputDictionary = new();
 
     public Context()
     {
-        _currentWebShopState = new WebShop();
         _currentMenuState = new MainState(this);
-        Db = _currentWebShopState.Database;
+        Products = Database.GetProducts();
+        Customers = Database.GetCustomers();
         SetDictionary();
     }
     
     //Create a dictionary of commands to get rid of the need for nested ifs or switch cases when taking user input.
     private void SetDictionary()
     {
-        _inputDictionary.Add("left", new CommandExecutor(MoveLeft));
-        _inputDictionary.Add("l", new CommandExecutor(MoveLeft));
-        _inputDictionary.Add("right", new CommandExecutor(MoveRight));
-        _inputDictionary.Add("r", new CommandExecutor(MoveRight));
-        _inputDictionary.Add("ok", new CommandExecutor(OnOk));
-        _inputDictionary.Add("o", new CommandExecutor(OnOk));
-        _inputDictionary.Add("k", new CommandExecutor(OnOk));
-        _inputDictionary.Add("back", new CommandExecutor(OnBack));
-        _inputDictionary.Add("b", new CommandExecutor(OnBack));
-        _inputDictionary.Add("q", new CommandExecutor(Quit));
-        _inputDictionary.Add("quit", new CommandExecutor(Quit));
+        _commandDictionary.Add("left", new CommandExecutor(MoveLeft));
+        _commandDictionary.Add("l", new CommandExecutor(MoveLeft));
+        _commandDictionary.Add("right", new CommandExecutor(MoveRight));
+        _commandDictionary.Add("r", new CommandExecutor(MoveRight));
+        _commandDictionary.Add("ok", new CommandExecutor(OnOk));
+        _commandDictionary.Add("o", new CommandExecutor(OnOk));
+        _commandDictionary.Add("k", new CommandExecutor(OnOk));
+        _commandDictionary.Add("back", new CommandExecutor(OnBack));
+        _commandDictionary.Add("b", new CommandExecutor(OnBack));
+        _commandDictionary.Add("q", new CommandExecutor(Quit));
+        _commandDictionary.Add("quit", new CommandExecutor(Quit));
     }
     
     //Logs customer out and resets login properties
     public void LogOut()
     {
-        _currentWebShopState.CurrentCustomer = null;
-        _currentWebShopState.IsLoggedIn = false;
-        _currentWebShopState.Password = "";
-        _currentWebShopState.Username = "";
+        CurrentCustomer = null;
+        IsLoggedIn = false;
+        Password = "";
+        Username = "";
         ChangeState(new MainState(this));
     }
-
-    //Gets logged in customers username
-    public string GetUserName()
-    {
-        return _currentWebShopState.Username!;
-    }
-
-    //Gets logged in customers password
-    public string GetPassWord()
-    {
-        return _currentWebShopState.Password!;
-    }
-
+    
     //Sets username property to be used for login attempt
     public void SetUserName()
     {
-        Message("A keyboard appears.\nPlease input your username.");
-        _currentWebShopState.Username = Console.ReadLine();
-        Console.WriteLine();
+        Console.WriteLine("\nA keyboard appears.\nPlease input your username.");
+        Username = Console.ReadLine();
     }
     
     //Sets password property to be used for login attempt 
     public void SetPassWord()
     {
-        Message("A keyboard appears.\nPlease input your password.");
-        _currentWebShopState.Password = Console.ReadLine();
-        Console.WriteLine();
+        Console.WriteLine("\nA keyboard appears.\nPlease input your password.");
+        Password = Console.ReadLine();
     }
     
-    //Gets product list length
-    public int GetProductCount()
-    {
-        return _currentWebShopState.Products.Count;
-    }
-
-    //Gets products list
-    public List<Product> GetProducts()
-    {
-        return _currentWebShopState.Products;
-    }
-
     //sets the current customer to a customer object
     public void SetCurrentCustomer(Customer? customer)
     {
-        _currentWebShopState.CurrentCustomer = customer;
-        _currentWebShopState.IsLoggedIn = true;
+        CurrentCustomer = customer;
+        IsLoggedIn = true;
     }
     
-    //Gets customer list
-    public List<Customer?> GetCustomers()
-    {
-        return _currentWebShopState.Customers;
-    }
-
     //Prints all products for the purchase menu
     public void OutputProducts()
     {
         int spotInList = 1;
-        foreach (var product in GetProducts())
+        foreach (var product in Products)
         {
             Console.WriteLine($"{spotInList}: {product.Name} , {product.Price} kr");
             spotInList++;
         }
-        Console.WriteLine("Your funds: " + GetCurrentCustomer()!.Funds);
+        Console.WriteLine("Your funds: " + CurrentCustomer.Funds);
     }
     
     //Prints all products for wares menu
     public void PrintProducts()
     {
         Console.WriteLine();
-        foreach (Product product in GetProducts())
+        foreach (Product product in Products)
         {
             product.PrintProductInfo();
         }
@@ -126,13 +104,13 @@ public class Context
     //Prints all orders of logged in customer
     public void PrintOrders()
     {
-        _currentWebShopState.CurrentCustomer!.PrintOrders();
+        CurrentCustomer.PrintOrders();
     }
     
     //Prints all properties/info of logged in customer
     public void PrintInfo()
     {
-        _currentWebShopState.CurrentCustomer!.PrintCustomerInfo();
+       CurrentCustomer.PrintCustomerInfo();
     }
     
     //Adds funds to logged in customer if input is a number.If so, it checks if the number is positive.
@@ -147,37 +125,18 @@ public class Context
                 Message("Don't add negative amounts.");
                 return;
             }
-            GetCurrentCustomer()!.Funds += amount;
-            Db.UpdateIntegerColumn("Customers", "Funds", GetCurrentCustomer()!.Funds, GetCurrentCustomer().Id);
+            CurrentCustomer.Funds += amount;
+            Database.UpdateIntegerColumn("Customers", "Funds", CurrentCustomer.Funds, CurrentCustomer.Id);
             Message($"{amount} added to your profile.");
             return;
         }
         Message("Please write a number next time.");
     }
     
-    //Gets logged in customer
-    public Customer? GetCurrentCustomer()
-    {
-        return _currentWebShopState.CurrentCustomer;
-    }
-    
     //Sets the current choice
     public void SetCurrentChoice(int position)
     {
-        _currentWebShopState.CurrentChoice = position;
-    }
-    
-    //Sets the current choice
-    public int GetCurrentChoice()
-    {
-        return _currentWebShopState.CurrentChoice;
-    }
-    
-    //adds/registers new customer 
-    public void RegisterCustomer()
-    { 
-        _currentWebShopState.RegisterCustomer();
-        ChangeState(new MainState(this));
+        CurrentChoice = position;
     }
     
     //Change current context/state
@@ -191,13 +150,7 @@ public class Context
         Console.WriteLine($"\n{message}\n");
     }
 
-    //get logged in property
-    public bool GetLoggedInStatus()
-    {
-        return _currentWebShopState.IsLoggedIn;
-    }
-
-    //executes current command
+    //executes current command and resets the choice cursor to 1
     private void OnOk()
     {
         _currentMenuState.Ok();
@@ -221,9 +174,9 @@ public class Context
     private void CustomerCheck()
     {
         Console.WriteLine("Your buttons are Left, Right, OK, Back and Quit.");
-        if (GetLoggedInStatus())
+        if (IsLoggedIn)
         {
-            Console.WriteLine($"Current user: {_currentWebShopState.CurrentCustomer!.Username}");
+            Console.WriteLine($"Current user: {CurrentCustomer!.Username}");
             return;
         }
         Console.WriteLine("Nobody logged in.");
@@ -233,7 +186,7 @@ public class Context
     //Checks if parameter equals a key in the commands dictionary. If so, it executes the method connected to that key
     private void MoveInMenu(string choice)
     {
-        foreach (var item in _inputDictionary)
+        foreach (var item in _commandDictionary)
         {
             if (String.Equals(choice, item.Key, StringComparison.CurrentCultureIgnoreCase))
             {
@@ -251,7 +204,7 @@ public class Context
         while (true)
         {
             ShowMenu();
-            var choice = Console.ReadLine()!;
+            var choice = Console.ReadLine();
             MoveInMenu(choice);
         }
     }
@@ -262,7 +215,7 @@ public class Context
         _currentMenuState.Quit();
     }
     
-    //Executes Moveleft quit method
+    //Executes current Moveleft  method
     private void MoveLeft()
     {
         _currentMenuState.MoveLeft();
@@ -272,5 +225,78 @@ public class Context
     private void MoveRight()
     {
         _currentMenuState.MoveRight();
+    }
+    
+    //Adds/registers a new customer using the CustomerBuilder Class and logs that new customer in.
+    //Also sends customer to database and resets the menu to main menu.
+    public void RegisterCustomer()
+    {
+        string message = "Please actually write something.";
+        
+        Console.WriteLine("Please write your username.");
+        var input = Console.ReadLine()!;
+        if (Customers.Any(customer => customer!.Username.Equals(input)))
+        {
+            Console.WriteLine("\nUsername already exists.\n");
+            return;
+        }
+        _customerBuilder.SetUsername(input);
+        _customerBuilder.SetPassword(RegisterProperty("a password", "password.", message));
+        _customerBuilder.SetFirstName(RegisterProperty("a first name", "first name.", message));
+        _customerBuilder.SetLastName(RegisterProperty("a last name", "last name.", message));
+        _customerBuilder.SetEmail(RegisterProperty("an email", "email.", message));
+        _customerBuilder.SetAge(RegisterProperty("an age", "age.", "Please write a number."));
+        _customerBuilder.SetAddress(RegisterProperty("an address", "address.", message));
+        _customerBuilder.SetPhoneNumber(RegisterProperty("a phone number", "phone number.", message));
+        Customer newCustomer = _customerBuilder.Build();
+        
+        Customers.Add(newCustomer);
+        CurrentCustomer = newCustomer;
+        IsLoggedIn = true;
+        Database.InsertCustomer(newCustomer);
+        Console.WriteLine($"\n{CurrentCustomer.Username} successfully added and is now logged in.\n");
+        ChangeState(new MainState(this));
+    }
+    
+    //Dictionary to execute a delegate if the input matches the key.
+    private void SetRegisterDictionary(string instruction, string message)
+    {
+        _inputDictionary.Add("y", () => OnYes(instruction, message));
+        _inputDictionary.Add("n", () => "");
+        //_inputDictionary.Add("q", (() => ChangeState(new LoginState(this))));
+    }
+    
+    //Asks user if they want to add each property or not. Loops through inputDictionary to check if input equals a key.
+    //Executes the delegate if it matches.
+    private string RegisterProperty(string question, string instruction, string message)
+    {
+        if (_inputDictionary.Count == 0)
+            SetRegisterDictionary(instruction, message);
+        _inputDictionary["y"] = () => OnYes(instruction, message);
+        
+        while (true)
+        {
+            Console.WriteLine($"Do you want {question}? y/n. Q to exit");
+            var choice = Console.ReadLine()!;
+
+            foreach (var item in _inputDictionary.Where(item => choice.ToLower().Equals(item.Key.ToLower())))
+            {
+                _executeMethod = item.Value;
+                return _executeMethod();
+            }
+            Console.WriteLine("\ny or n, please.\n");
+        }
+    }
+    
+    //if user says yes in registerproperty it takes a new input that becomes the property value.
+    private string OnYes(string instruction, string message)
+    {
+        while (true)
+        {
+            Console.WriteLine($"Please write your {instruction}");
+            var input = Console.ReadLine()!;
+            if (!input.Equals("")) return input;
+            Console.WriteLine($"\n{message}\n");
+        }   
     }
 }

@@ -26,7 +26,6 @@ public class WebShop
         Customers = Database.GetCustomers();
     }
     
-    
     //Adds/registers a new customer using the CustomerBuilder Class and logs that new customer in.
     public void RegisterCustomer()
     {

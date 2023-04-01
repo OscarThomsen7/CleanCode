@@ -17,19 +17,21 @@ public class PurchaseOptions : IOption
     //Then creates a new order with all the info collected and sends it to the db and adds it to current customers orders list
     public void Option1()
     {
-        Customer currentCustomer = _context.GetCurrentCustomer();
-        Product product = _context.GetProducts()[_context.GetCurrentChoice() - 1];
+        Customer currentCustomer = _context.CurrentCustomer;
+        Product product = _context.Products[_context.CurrentChoice - 1];
         if (product.InStock())
         {
             if (currentCustomer.CanAfford(product.Price))
             {
                 currentCustomer.Funds -= product.Price;
-                _context.Db.UpdateIntegerColumn("Customers", "Funds", currentCustomer.Funds, currentCustomer.Id);
+                _context.Database.UpdateIntegerColumn("Customers", "Funds", currentCustomer.Funds, currentCustomer.Id);
                 product.NrInStock -= 1;
-                _context.Db.UpdateIntegerColumn("Products", "NumberInStock", product.NrInStock, product.Id);
+                
+                _context.Database.UpdateIntegerColumn("Products", "NumberInStock", product.NrInStock, product.Id);
                 Order order = new Order(currentCustomer.Id, product.Id, product.Name, product.Price, DateTime.Now);
                 currentCustomer.Orders.Add(order);
-                _context.Db.InsertOrder(order, currentCustomer, product);
+                
+                _context.Database.InsertOrder(order, currentCustomer, product);
                 _context.Message($"Successfully bought {product.Name}");
                 return;
             }

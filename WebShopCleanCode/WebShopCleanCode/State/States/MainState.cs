@@ -18,7 +18,7 @@ public class MainState : MenuTemplate
             new(() => option.Option2()),
             new(() => option.Option3()),
         };
-        SetMethodListAndMenuType(options, _menuDirector.BuildMainMenu(context.GetLoggedInStatus()));
+        SetMethodListAndMenuType(options, _menuDirector.BuildMainMenu(context.IsLoggedIn));
     }
 
     

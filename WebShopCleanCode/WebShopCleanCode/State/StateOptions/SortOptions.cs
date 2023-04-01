@@ -15,8 +15,8 @@ public class SortOptions :IOption
     public SortOptions(Context context)
     {
         _context = context;
-        _length = _context.GetProductCount();
-        _products = _context.GetProducts();
+        _length = _context.Products.Count;
+        _products = _context.Products;
     }
 
     
