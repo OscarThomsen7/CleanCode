@@ -126,7 +126,6 @@ public class MenuTemplate
                     return;
                 }
                 _context.Message("That is not an applicable option.");
-                
             };
             return;
         }
