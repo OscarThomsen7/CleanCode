@@ -87,6 +87,8 @@ public class MenuTemplate
         _rightOverride();
     }
 
+    
+    //Checks if the current menu is a main menu or a purchase menu and sets the back method to its proper implementation.
     private void CheckBack()
     {
         Dictionary<string, BackOverride> dictionary = new Dictionary<string, BackOverride>();
@@ -109,6 +111,9 @@ public class MenuTemplate
         }
     }
 
+    
+    //Checks if the current menu is a purchase menu to set the moveleft method to its proper implementation.
+    //The purchase menu is the only menu with the need for different implementation in move left
     private void CheckLeft()
     {
         if (_menu.Name.Equals("Purchase menu"))
@@ -137,6 +142,9 @@ public class MenuTemplate
         };
     }
     
+    
+    //Checks if the current menu is a purchase menu to set the moveright method to its proper implementation.
+    //The purchase menu is the only menu with the need for different implementation in moveright
     private void CheckRight()
     {
         if (_menu.Name.Equals("Purchase menu"))
