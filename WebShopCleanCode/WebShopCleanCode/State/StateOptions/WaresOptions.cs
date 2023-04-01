@@ -29,7 +29,7 @@ public class WaresOptions : IOption
     {
         if (_context.IsLoggedIn)
         {
-            _context.ChangeState(new ContextMenu(_context, new PurchaseOptions(_context), _menuDirector.BuildPurchaseMenu(_context.Products.Count)));
+            _context.ChangeState(new MenuState(_context, new PurchaseOptions(_context), _menuDirector.BuildPurchaseMenu(_context.Products.Count)));
             return;
         }
         _context.Message("You must be logged in to purchase wares.");
@@ -39,7 +39,7 @@ public class WaresOptions : IOption
     //changes state/context to the sort menu
     public void Option3()
     {
-        _context.ChangeState(new ContextMenu(_context, new SortOptions(_context), _menuDirector.BuildSortMenu()));            
+        _context.ChangeState(new MenuState(_context, new SortOptions(_context), _menuDirector.BuildSortMenu()));            
     }
 
     
@@ -48,7 +48,7 @@ public class WaresOptions : IOption
     {
         if (_context.IsLoggedIn == false)
         {
-            _context.ChangeState(new ContextMenu(_context, new LoginOptions(_context), _menuDirector.BuildLoginMenu()));            
+            _context.ChangeState(new MenuState(_context, new LoginOptions(_context), _menuDirector.BuildLoginMenu()));            
             return;
         }
         _context.Message($"{_context.CurrentCustomer.Username} logged out.");

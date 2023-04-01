@@ -18,7 +18,7 @@ public class MainOptions : IOption
     public void Option1()
     {
         //_context.ChangeState(new WaresState(_context));
-        _context.ChangeState(new ContextMenu(_context, new WaresOptions(_context), _menuDirector.BuildWaresMenu(_context.IsLoggedIn)));
+        _context.ChangeState(new MenuState(_context, new WaresOptions(_context), _menuDirector.BuildWaresMenu(_context.IsLoggedIn)));
     }
     
     //If a customer is logged in it changes state/context to the customer menu
@@ -26,7 +26,7 @@ public class MainOptions : IOption
     {
         if (_context.IsLoggedIn)
         {
-            _context.ChangeState(new ContextMenu(_context, new CustomerOptions(_context), _menuDirector.BuildCustomerMenu()));
+            _context.ChangeState(new MenuState(_context, new CustomerOptions(_context), _menuDirector.BuildCustomerMenu()));
             return;
         }
         _context.Message("Nobody is logged in.");
@@ -37,7 +37,7 @@ public class MainOptions : IOption
     {
         if (_context.IsLoggedIn == false)
         {
-            _context.ChangeState(new ContextMenu(_context, new LoginOptions(_context), _menuDirector.BuildLoginMenu()));            
+            _context.ChangeState(new MenuState(_context, new LoginOptions(_context), _menuDirector.BuildLoginMenu()));            
             return;
         }
         _context.Message($"{_context.CurrentCustomer.Username} logged out.");

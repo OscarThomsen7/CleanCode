@@ -3,9 +3,9 @@ using WebShopCleanCode.State.StateOptions;
 
 namespace WebShopCleanCode.State.States;
 
-public class ContextMenu : MenuTemplate
+public class MenuState : MenuTemplate
 {
-    public ContextMenu(Context context, IOption option, Menu menu) : base(context)
+    public MenuState(Context context, IOption option, Menu menu) : base(context)
     {
         SetMethodListAndMenuType(option.GetOptions(), menu);
     }

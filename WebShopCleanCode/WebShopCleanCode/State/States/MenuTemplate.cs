@@ -94,7 +94,7 @@ public class MenuTemplate
         dictionary.Add("Purchase menu",
             () =>
             {
-                _context.ChangeState(new ContextMenu(_context, new WaresOptions(_context),
+                _context.ChangeState(new MenuState(_context, new WaresOptions(_context),
                     _menuDirector.BuildWaresMenu(_context.IsLoggedIn)));
             });
         foreach (var item in dictionary)
@@ -104,7 +104,7 @@ public class MenuTemplate
                 _backOverride = item.Value;
                 return;
             }
-            _backOverride = () => _context.ChangeState(new ContextMenu(_context, new MainOptions(_context),
+            _backOverride = () => _context.ChangeState(new MenuState(_context, new MainOptions(_context),
                 _menuDirector.BuildMainMenu(_context.IsLoggedIn)));
         }
     }

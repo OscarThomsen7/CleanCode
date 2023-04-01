@@ -28,7 +28,7 @@ public class SortOptions :IOption
     {
         _quickSort.SortByName(_products, 0, _length - 1, false);
         _context.Message("Wares sorted.");
-        _context.ChangeState(new ContextMenu(_context, new WaresOptions(_context), _menuDirector.BuildWaresMenu(_context.IsLoggedIn)));            
+        _context.ChangeState(new MenuState(_context, new WaresOptions(_context), _menuDirector.BuildWaresMenu(_context.IsLoggedIn)));            
     }
 
     //Sorts product list by name, ascending
@@ -36,7 +36,7 @@ public class SortOptions :IOption
     {
         _quickSort.SortByName(_products, 0, _length - 1, true);
         _context.Message("Wares sorted.");
-        _context.ChangeState(new ContextMenu(_context, new WaresOptions(_context), _menuDirector.BuildWaresMenu(_context.IsLoggedIn)));            
+        _context.ChangeState(new MenuState(_context, new WaresOptions(_context), _menuDirector.BuildWaresMenu(_context.IsLoggedIn)));            
     }
 
     //Sorts product list by price, descending
@@ -44,7 +44,7 @@ public class SortOptions :IOption
     {
         _quickSort.SortByPrice(_products, 0, _length - 1, false);
         _context.Message("Wares sorted.");
-        _context.ChangeState(new ContextMenu(_context, new WaresOptions(_context), _menuDirector.BuildWaresMenu(_context.IsLoggedIn)));            
+        _context.ChangeState(new MenuState(_context, new WaresOptions(_context), _menuDirector.BuildWaresMenu(_context.IsLoggedIn)));            
     }
 
     //Sorts product list by price,ascending
@@ -52,7 +52,7 @@ public class SortOptions :IOption
     {
         _quickSort.SortByPrice(_products, 0, _length - 1, true);
         _context.Message("Wares sorted.");
-        _context.ChangeState(new ContextMenu(_context, new WaresOptions(_context), _menuDirector.BuildWaresMenu(_context.IsLoggedIn)));            
+        _context.ChangeState(new MenuState(_context, new WaresOptions(_context), _menuDirector.BuildWaresMenu(_context.IsLoggedIn)));            
     }
 
     public List<CommandExecutor> GetOptions()

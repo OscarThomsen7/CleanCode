@@ -43,7 +43,7 @@ public class LoginOptions : IOption
             {
                 _context.Message($"{ customer.Username} logged in.");
                 _context.SetCurrentCustomer(customer);
-                _context.ChangeState(new ContextMenu(_context, new MainOptions(_context), _menuDirector.BuildMainMenu(_context.IsLoggedIn)));                return;
+                _context.ChangeState(new MenuState(_context, new MainOptions(_context), _menuDirector.BuildMainMenu(_context.IsLoggedIn)));                return;
             }
         }
         _context.Message("Invalid credentials.");
