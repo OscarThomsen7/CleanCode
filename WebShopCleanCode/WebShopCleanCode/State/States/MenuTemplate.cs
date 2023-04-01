@@ -72,7 +72,7 @@ public class MenuTemplate
 
     //Moves left in the option choices if the cursor is not already in the leftmost position.
     //Also sets the commandexecutor to the new option.  
-    public virtual void MoveLeft()
+    public void MoveLeft()
     {
         CheckLeft();
         _leftOverride();
@@ -81,7 +81,7 @@ public class MenuTemplate
 
     //Moves right in the option choices if the cursor is not already in the rightmost position.
     //Also sets the commandexecutor to the new option. 
-    public virtual void MoveRight()
+    public void MoveRight()
     {
         CheckRight();
         _rightOverride();
