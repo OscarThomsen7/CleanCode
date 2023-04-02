@@ -12,23 +12,23 @@ public class MenuTemplate
     private Menu _menu;
     private MenuDirector _menuDirector = new();
     private List<CommandExecutor> _options;
-    private CommandExecutor _commandExecutor, _backOverride, _leftOverride, _rightOverride;
+    private CommandExecutor _commandExecutor, _moveMethodExecutor, _leftExecutor, _rightExecutor;
+    private Dictionary<string, CommandExecutor> dictionary = new();
 
     protected MenuTemplate(Context context)
     {
         _context = context;
+        SetDictionary();
     }
-
-
-    //Takes parameters from the menu that is the current state/context and sets commands and menu properties to the current menu passed.
+    
+    //Takes parameters from the menu that is the state/context passed and sets commands and menu properties to the menu passed.
     protected void SetMethodListAndMenuType(List<CommandExecutor> methods, Menu menu)
     {
         _menu = menu;
         _options = methods;
         _commandExecutor = _options[0];
     }
-
-
+    
     //Prints the current menu
     public void ShowMenu()
     {
@@ -38,70 +38,56 @@ public class MenuTemplate
         }
         _menu.DisplayMenu(_context.CurrentChoice);
     }
-
-
+    
     //Execute the current chosen method
     public void Ok()
     {
         _commandExecutor.ExecuteMethod();
     }
-
-
+    
     //Changes state/context back to main menu
     public void Back()
     {
         CheckBack();
-        _backOverride.ExecuteMethod();
+        _moveMethodExecutor.ExecuteMethod();
     }
-
-
+    
     //Quit the application
     public void Quit()
     {
         Console.WriteLine("The console powers down. You are free to leave.");
         Environment.Exit(0);
     }
-
-
+    
     //Moves left in the option choices if the cursor is not already in the leftmost position.
-    //Also sets the commandexecutor to the new option.  
     public void MoveLeft()
     {
         CheckLeft();
-        _leftOverride.ExecuteMethod();
+        _moveMethodExecutor.ExecuteMethod();
     }
-
-
+    
     //Moves right in the option choices if the cursor is not already in the rightmost position.
-    //Also sets the commandexecutor to the new option. 
     public void MoveRight()
     {
         CheckRight();
-        _rightOverride.ExecuteMethod();
+        _moveMethodExecutor.ExecuteMethod();
     }
-
     
-    //Checks if the current menu is a main menu or a purchase menu and sets the back method to its proper implementation.
+    //Checks if the current menu is a main menu or a purchase menu and sets the back method to its proper implementation
+    //from the dictionary of methods.
     private void CheckBack()
     {
-        Dictionary<string, CommandExecutor> dictionary = new Dictionary<string, CommandExecutor>();
-        dictionary.Add("Main menu", new(() => { Console.WriteLine("You're already on the main menu."); }));
-        dictionary.Add("Purchase menu", new(() => { 
-            _context.ChangeState(new MenuState(_context, new WaresOptions(_context),
-                    _menuDirector.BuildWaresMenu(_context.IsLoggedIn))); }));
-        
         foreach (var item in dictionary)
         {
             if (_menu.Name.Equals(item.Key))
             {
-                _backOverride = item.Value;
+                _moveMethodExecutor = item.Value;
                 return;
             }
-            _backOverride = new(() => _context.ChangeState(new MenuState(_context, new MainOptions(_context),
+            _moveMethodExecutor = new(() => _context.ChangeState(new MenuState(_context, new MainOptions(_context),
                 _menuDirector.BuildMainMenu(_context.IsLoggedIn))));
         }
     }
-
     
     //Checks if the current menu is a purchase menu to set the moveleft method to its proper implementation.
     //The purchase menu is the only menu with the need for different implementation in move left
@@ -109,7 +95,33 @@ public class MenuTemplate
     {
         if (_menu.Name.Equals("Purchase menu"))
         {
-            _leftOverride = new(() =>
+            _moveMethodExecutor = dictionary["Purchase menu left"];
+            return;
+        }
+        _moveMethodExecutor = dictionary["left"];
+    }
+    
+    //Checks if the current menu is a purchase menu to set the moveright method to its proper implementation.
+    //The purchase menu is the only menu with the need for different implementation in moveright
+    private void CheckRight()
+    {
+        if (_menu.Name.Equals("Purchase menu"))
+        {
+            _moveMethodExecutor = dictionary["Purchase menu right"];
+            return;
+        }
+        _moveMethodExecutor = dictionary["right"];
+    }
+    
+    //Adds all keys and values/commandExecutors to the dictionary, these are used in Back(), MoveLeft() and MoveRight(). 
+    private void SetDictionary()
+    {
+        dictionary.Add("Main menu", new(() => { Console.WriteLine("You're already on the main menu."); }));
+        dictionary.Add("Purchase menu", new(() => { 
+            _context.ChangeState(new MenuState(_context, new WaresOptions(_context),
+                _menuDirector.BuildWaresMenu(_context.IsLoggedIn))); }));
+        dictionary.Add("Purchase menu left", new(() =>
+        {
             {
                 if (_context.CurrentChoice > 1)
                 {
@@ -117,10 +129,9 @@ public class MenuTemplate
                     return;
                 }
                 _context.Message("That is not an applicable option.");
-            });
-            return;
-        }
-        _leftOverride = new(() =>
+            }
+        }));
+        dictionary.Add("left", new(() =>
         {
             if (_context.CurrentChoice > 1)
             {
@@ -129,17 +140,9 @@ public class MenuTemplate
                 return;
             }
             _context.Message("That is not an applicable option.");
-        });
-    }
-    
-    
-    //Checks if the current menu is a purchase menu to set the moveright method to its proper implementation.
-    //The purchase menu is the only menu with the need for different implementation in moveright
-    private void CheckRight()
-    {
-        if (_menu.Name.Equals("Purchase menu"))
+        }));
+        dictionary.Add("Purchase menu right", new(() =>
         {
-            _rightOverride = new(() =>
             {
                 if (_context.CurrentChoice < _menu.AmountOfOptions)
                 {
@@ -147,10 +150,9 @@ public class MenuTemplate
                     return;
                 }
                 _context.Message("That is not an applicable option.");
-            });
-            return;
-        }
-        _rightOverride = new(() =>
+            }
+        }));
+        dictionary.Add("right", new(() =>
         {
             if (_context.CurrentChoice < _menu.AmountOfOptions)
             {
@@ -159,6 +161,6 @@ public class MenuTemplate
                 return;
             }
             _context.Message("That is not an applicable option.");
-        });
+        }));
     }
 }
