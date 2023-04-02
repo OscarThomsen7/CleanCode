@@ -120,7 +120,6 @@ namespace WebShopCleanCode
             connection.Close();
         }
         
-        
         //inserts order
         public void InsertOrder(Order order, Customer customer, Product product)
         {
@@ -138,7 +137,6 @@ namespace WebShopCleanCode
             order.Id = (int)connection.LastInsertRowId;
             connection.Close();
         }
-
         
         //Gets each customer from database and adds it to the customer list 
         private void GetCustomersFromDb()
@@ -150,30 +148,27 @@ namespace WebShopCleanCode
             
             using SQLiteCommand command1 = new SQLiteCommand(query, connection);
             int rowCount = Convert.ToInt32(command1.ExecuteScalar());
-            if (rowCount > 0)
-            {
-                CustomerBuilder customerBuilder = new CustomerBuilder();
-                using var command = new SQLiteCommand(connection);
-                command.CommandText = "SELECT * FROM " + _customers;
+            if (rowCount <= 0) return;
+            CustomerBuilder customerBuilder = new CustomerBuilder();
+            using var command = new SQLiteCommand(connection);
+            command.CommandText = "SELECT * FROM " + _customers;
 
-                using var reader = command.ExecuteReader();
-                while (reader.Read())
-                {
-                    customerBuilder.SetId(reader.GetInt32(0));
-                    customerBuilder.SetUsername(reader.GetString(1));
-                    customerBuilder.SetPassword(reader.GetString(2));
-                    customerBuilder.SetFirstName(reader.GetString(3));
-                    customerBuilder.SetLastName(reader.GetString(4));
-                    customerBuilder.SetEmail(reader.GetString(5));
-                    customerBuilder.SetAge(reader.GetInt32(6).ToString());
-                    customerBuilder.SetAddress(reader.GetString(7));
-                    customerBuilder.SetPhoneNumber(reader.GetString(8));
-                    customerBuilder.SetFunds(reader.GetInt32(9));
-                    _customersInDatabase.Add(customerBuilder.Build());
-                }   
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                customerBuilder.SetId(reader.GetInt32(0));
+                customerBuilder.SetUsername(reader.GetString(1));
+                customerBuilder.SetPassword(reader.GetString(2));
+                customerBuilder.SetFirstName(reader.GetString(3));
+                customerBuilder.SetLastName(reader.GetString(4));
+                customerBuilder.SetEmail(reader.GetString(5));
+                customerBuilder.SetAge(reader.GetInt32(6).ToString());
+                customerBuilder.SetAddress(reader.GetString(7));
+                customerBuilder.SetPhoneNumber(reader.GetString(8));
+                customerBuilder.SetFunds(reader.GetInt32(9));
+                _customersInDatabase.Add(customerBuilder.Build());
             }
         }
-
         
         //Gets each product from database and adds it to the product list 
         private void GetProductsFromDb()
@@ -183,24 +178,23 @@ namespace WebShopCleanCode
             connection.Open();
             using SQLiteCommand command1 = new SQLiteCommand(query, connection);
             int rowCount = Convert.ToInt32(command1.ExecuteScalar());
-            if (rowCount > 0)
-            {
-                using var command = new SQLiteCommand(connection);
-                command.CommandText = "SELECT * FROM " + _products;
+            if (rowCount <= 0) return;
+            using var command = new SQLiteCommand(connection);
+            command.CommandText = "SELECT * FROM " + _products;
 
-                using var reader = command.ExecuteReader();
-                while (reader.Read())
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                Product product = new Product("", 0, 0)
                 {
-                    Product product = new Product("", 0, 0);
-                    product.Id = reader.GetInt32(0);
-                    product.Name = reader.GetString(1);
-                    product.Price = reader.GetInt32(2);
-                    product.NrInStock = reader.GetInt32(3);
-                    _productsInDatabase.Add(product);
-                }   
+                    Id = reader.GetInt32(0),
+                    Name = reader.GetString(1),
+                    Price = reader.GetInt32(2),
+                    NrInStock = reader.GetInt32(3)
+                };
+                _productsInDatabase.Add(product);
             }
         }
-        
         
         //Gets each order from database and adds it to the order list 
         private void GetOrdersFromDb()
@@ -210,28 +204,27 @@ namespace WebShopCleanCode
             connection.Open();
             using SQLiteCommand command1 = new SQLiteCommand(query, connection);
             int rowCount = Convert.ToInt32(command1.ExecuteScalar());
-            if (rowCount > 0)
-            {
-                using var command = new SQLiteCommand(connection);
-                command.CommandText = "SELECT * FROM " + _orders;
+            if (rowCount <= 0) return;
+            using var command = new SQLiteCommand(connection);
+            command.CommandText = "SELECT * FROM " + _orders;
 
-                using var reader = command.ExecuteReader();
-                while (reader.Read())
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                Order order = new Order(0, 0, "", 0, DateTime.Now)
                 {
-                    Order order = new Order(0, 0, "", 0, DateTime.Now);
-                    order.Id = reader.GetInt32(0);
-                    order.CustomerId = reader.GetInt32(1);
-                    order.ProductId = reader.GetInt32(2);
-                    order.Name = reader.GetString(3);
-                    order.BoughtFor = reader.GetInt32(4);
-                    var dateString = (DateTime)reader["PurchaseTime"];
-                    order.PurchaseTime = dateString;
-                    _ordersInDatabase.Add(order);
-                }
+                    Id = reader.GetInt32(0),
+                    CustomerId = reader.GetInt32(1),
+                    ProductId = reader.GetInt32(2),
+                    Name = reader.GetString(3),
+                    BoughtFor = reader.GetInt32(4)
+                };
+                var dateString = (DateTime)reader["PurchaseTime"];
+                order.PurchaseTime = dateString;
+                _ordersInDatabase.Add(order);
             }
         }
 
-        
         //checks every customer id column in the orders table and id column of the customers table to see if they match.
         //If they do that order is added to that customers orders list.
         private void SetOrdersToCustomers()

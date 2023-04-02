@@ -12,8 +12,8 @@ public class MenuTemplate
     private Menu _menu;
     private MenuDirector _menuDirector = new();
     private List<CommandExecutor> _options;
-    private CommandExecutor _commandExecutor, _moveMethodExecutor, _leftExecutor, _rightExecutor;
-    private Dictionary<string, CommandExecutor> dictionary = new();
+    private CommandExecutor _commandExecutor, _moveMethodExecutor;
+    private Dictionary<string, CommandExecutor> _methodDictionary = new();
 
     protected MenuTemplate(Context context)
     {
@@ -77,7 +77,7 @@ public class MenuTemplate
     //from the dictionary of methods.
     private void CheckBack()
     {
-        foreach (var item in dictionary)
+        foreach (var item in _methodDictionary)
         {
             if (_menu.Name.Equals(item.Key))
             {
@@ -95,10 +95,10 @@ public class MenuTemplate
     {
         if (_menu.Name.Equals("Purchase menu"))
         {
-            _moveMethodExecutor = dictionary["Purchase menu left"];
+            _moveMethodExecutor = _methodDictionary["Purchase menu left"];
             return;
         }
-        _moveMethodExecutor = dictionary["left"];
+        _moveMethodExecutor = _methodDictionary["left"];
     }
     
     //Checks if the current menu is a purchase menu to set the moveright method to its proper implementation.
@@ -107,20 +107,20 @@ public class MenuTemplate
     {
         if (_menu.Name.Equals("Purchase menu"))
         {
-            _moveMethodExecutor = dictionary["Purchase menu right"];
+            _moveMethodExecutor = _methodDictionary["Purchase menu right"];
             return;
         }
-        _moveMethodExecutor = dictionary["right"];
+        _moveMethodExecutor = _methodDictionary["right"];
     }
     
     //Adds all keys and values/commandExecutors to the dictionary, these are used in Back(), MoveLeft() and MoveRight(). 
     private void SetDictionary()
     {
-        dictionary.Add("Main menu", new(() => { Console.WriteLine("You're already on the main menu."); }));
-        dictionary.Add("Purchase menu", new(() => { 
+        _methodDictionary.Add("Main menu", new(() => { Console.WriteLine("You're already on the main menu."); }));
+        _methodDictionary.Add("Purchase menu", new(() => { 
             _context.ChangeState(new MenuState(_context, new WaresOptions(_context),
                 _menuDirector.BuildWaresMenu(_context.IsLoggedIn))); }));
-        dictionary.Add("Purchase menu left", new(() =>
+        _methodDictionary.Add("Purchase menu left", new(() =>
         {
             {
                 if (_context.CurrentChoice > 1)
@@ -131,7 +131,7 @@ public class MenuTemplate
                 _context.Message("That is not an applicable option.");
             }
         }));
-        dictionary.Add("left", new(() =>
+        _methodDictionary.Add("left", new(() =>
         {
             if (_context.CurrentChoice > 1)
             {
@@ -141,7 +141,7 @@ public class MenuTemplate
             }
             _context.Message("That is not an applicable option.");
         }));
-        dictionary.Add("Purchase menu right", new(() =>
+        _methodDictionary.Add("Purchase menu right", new(() =>
         {
             {
                 if (_context.CurrentChoice < _menu.AmountOfOptions)
@@ -152,7 +152,7 @@ public class MenuTemplate
                 _context.Message("That is not an applicable option.");
             }
         }));
-        dictionary.Add("right", new(() =>
+        _methodDictionary.Add("right", new(() =>
         {
             if (_context.CurrentChoice < _menu.AmountOfOptions)
             {

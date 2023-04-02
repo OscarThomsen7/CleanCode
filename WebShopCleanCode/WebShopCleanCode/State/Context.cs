@@ -11,10 +11,10 @@ public class Context
     //This class is what runs the whole application.
     //different methods will be executed depending oon what state/menu the application is set to.
     private MenuTemplate _currentMenuState;
-    private readonly Dictionary<string, CommandExecutor> _commandDictionary = new();
+    private Dictionary<string, CommandExecutor> _commandDictionary = new();
     private MenuDirector _menuDirector = new();
     public Database Database { get;} = new();
-    private readonly CustomerBuilder _customerBuilder = new();
+    private CustomerBuilder _customerBuilder = new();
     public List<Product> Products { get;}
     public List<Customer?> Customers { get;}
     public Customer? CurrentCustomer { get; set; }
@@ -24,7 +24,7 @@ public class Context
     public string Password { get; set; } = "";
     private delegate string ExecuteMethod();
     private ExecuteMethod _executeMethod;
-    private readonly Dictionary<string, ExecuteMethod> _inputDictionary = new();
+    private Dictionary<string, ExecuteMethod> _inputDictionary = new();
 
     public Context()
     {
