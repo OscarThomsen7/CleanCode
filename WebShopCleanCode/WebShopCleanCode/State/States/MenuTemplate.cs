@@ -12,15 +12,8 @@ public class MenuTemplate
     private Menu _menu;
     private MenuDirector _menuDirector = new();
     private List<CommandExecutor> _options;
-    private CommandExecutor _commandExecutor;
+    private CommandExecutor _commandExecutor, _backOverride, _leftOverride, _rightOverride;
 
-    private delegate void BackOverride();
-    private BackOverride _backOverride;
-    private delegate void LeftOverride();
-    private delegate void RightOverride();
-    private LeftOverride _leftOverride;
-    private RightOverride _rightOverride;
-    
     protected MenuTemplate(Context context)
     {
         _context = context;
@@ -58,7 +51,7 @@ public class MenuTemplate
     public void Back()
     {
         CheckBack();
-        _backOverride();
+        _backOverride.ExecuteMethod();
     }
 
 
@@ -75,7 +68,7 @@ public class MenuTemplate
     public void MoveLeft()
     {
         CheckLeft();
-        _leftOverride();
+        _leftOverride.ExecuteMethod();
     }
 
 
@@ -84,21 +77,19 @@ public class MenuTemplate
     public void MoveRight()
     {
         CheckRight();
-        _rightOverride();
+        _rightOverride.ExecuteMethod();
     }
 
     
     //Checks if the current menu is a main menu or a purchase menu and sets the back method to its proper implementation.
     private void CheckBack()
     {
-        Dictionary<string, BackOverride> dictionary = new Dictionary<string, BackOverride>();
-        dictionary.Add("Main menu", () => { Console.WriteLine("You're already on the main menu."); });
-        dictionary.Add("Purchase menu",
-            () =>
-            {
-                _context.ChangeState(new MenuState(_context, new WaresOptions(_context),
-                    _menuDirector.BuildWaresMenu(_context.IsLoggedIn)));
-            });
+        Dictionary<string, CommandExecutor> dictionary = new Dictionary<string, CommandExecutor>();
+        dictionary.Add("Main menu", new(() => { Console.WriteLine("You're already on the main menu."); }));
+        dictionary.Add("Purchase menu", new(() => { 
+            _context.ChangeState(new MenuState(_context, new WaresOptions(_context),
+                    _menuDirector.BuildWaresMenu(_context.IsLoggedIn))); }));
+        
         foreach (var item in dictionary)
         {
             if (_menu.Name.Equals(item.Key))
@@ -106,8 +97,8 @@ public class MenuTemplate
                 _backOverride = item.Value;
                 return;
             }
-            _backOverride = () => _context.ChangeState(new MenuState(_context, new MainOptions(_context),
-                _menuDirector.BuildMainMenu(_context.IsLoggedIn)));
+            _backOverride = new(() => _context.ChangeState(new MenuState(_context, new MainOptions(_context),
+                _menuDirector.BuildMainMenu(_context.IsLoggedIn))));
         }
     }
 
@@ -118,7 +109,7 @@ public class MenuTemplate
     {
         if (_menu.Name.Equals("Purchase menu"))
         {
-            _leftOverride = () =>
+            _leftOverride = new(() =>
             {
                 if (_context.CurrentChoice > 1)
                 {
@@ -126,10 +117,10 @@ public class MenuTemplate
                     return;
                 }
                 _context.Message("That is not an applicable option.");
-            };
+            });
             return;
         }
-        _leftOverride = () =>
+        _leftOverride = new(() =>
         {
             if (_context.CurrentChoice > 1)
             {
@@ -138,7 +129,7 @@ public class MenuTemplate
                 return;
             }
             _context.Message("That is not an applicable option.");
-        };
+        });
     }
     
     
@@ -148,7 +139,7 @@ public class MenuTemplate
     {
         if (_menu.Name.Equals("Purchase menu"))
         {
-            _rightOverride = () =>
+            _rightOverride = new(() =>
             {
                 if (_context.CurrentChoice < _menu.AmountOfOptions)
                 {
@@ -156,10 +147,10 @@ public class MenuTemplate
                     return;
                 }
                 _context.Message("That is not an applicable option.");
-            };
+            });
             return;
         }
-        _rightOverride = () =>
+        _rightOverride = new(() =>
         {
             if (_context.CurrentChoice < _menu.AmountOfOptions)
             {
@@ -168,6 +159,6 @@ public class MenuTemplate
                 return;
             }
             _context.Message("That is not an applicable option.");
-        };
+        });
     }
 }
