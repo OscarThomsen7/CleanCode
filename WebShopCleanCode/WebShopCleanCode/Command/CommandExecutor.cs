@@ -2,7 +2,6 @@
 
 public class CommandExecutor
 {
-    
     //Command design pattern that takes a delegated method to be executed wherever this is used.
     public delegate void DelegateMethod();
 
