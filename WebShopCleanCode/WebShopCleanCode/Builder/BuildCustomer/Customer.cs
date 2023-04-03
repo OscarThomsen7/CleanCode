@@ -27,8 +27,7 @@ public class Customer
         Orders = new List<Order>();
         Funds = funds;
     }
-    
-    
+
     //Check if customer can afford to buy something
     public bool CanAfford(int price)
     {
@@ -43,7 +42,6 @@ public class Customer
             Console.Write($"{text} {property}");
         }
     }
-        
     
     //Logs all properties that are not empty strings or -1 to the console
     public void PrintCustomerInfo()
@@ -60,7 +58,6 @@ public class Customer
         Console.WriteLine(", Funds: " + Funds);
         Console.WriteLine();
     }
-
     
     //Log all orders of a customer to the console
     public void PrintOrders()

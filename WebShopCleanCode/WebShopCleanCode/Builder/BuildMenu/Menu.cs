@@ -20,7 +20,6 @@ public class Menu
         Info = info;
     }
 
-    
     //Log the menu properties of the menu object to the console
     public void DisplayMenu(int currentChoice)
     {
@@ -37,8 +36,7 @@ public class Menu
         }
         ChoiceRepresentor(currentChoice);
     }
-    
-    
+
     //Method to output the choice bar in the menu
     private void ChoiceRepresentor(int currentChoice)
     {

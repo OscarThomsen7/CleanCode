@@ -1,5 +1,4 @@
 ﻿using WebShopCleanCode.Builder.BuildCustomer;
-using System.IO;
 using System.Data.SQLite;
 
 namespace WebShopCleanCode
@@ -35,7 +34,6 @@ namespace WebShopCleanCode
             }
         }
 
-        
         //If a database file does not exist it creates one and creates all the tables. Also gets all data from the database
         private void CreateDatabase()
         {
@@ -146,8 +144,8 @@ namespace WebShopCleanCode
             
             connection.Open();
             
-            using SQLiteCommand command1 = new SQLiteCommand(query, connection);
-            int rowCount = Convert.ToInt32(command1.ExecuteScalar());
+            using SQLiteCommand countRows = new SQLiteCommand(query, connection);
+            int rowCount = Convert.ToInt32(countRows.ExecuteScalar());
             if (rowCount <= 0) return;
             CustomerBuilder customerBuilder = new CustomerBuilder();
             using var command = new SQLiteCommand(connection);
@@ -176,8 +174,8 @@ namespace WebShopCleanCode
             string query = $"SELECT COUNT(*) FROM {_products}";
             using SQLiteConnection connection = new SQLiteConnection("Data Source=" + _dbFilePath);
             connection.Open();
-            using SQLiteCommand command1 = new SQLiteCommand(query, connection);
-            int rowCount = Convert.ToInt32(command1.ExecuteScalar());
+            using SQLiteCommand countRows = new SQLiteCommand(query, connection);
+            int rowCount = Convert.ToInt32(countRows.ExecuteScalar());
             if (rowCount <= 0) return;
             using var command = new SQLiteCommand(connection);
             command.CommandText = "SELECT * FROM " + _products;
@@ -202,8 +200,8 @@ namespace WebShopCleanCode
             string query = $"SELECT COUNT(*) FROM {_orders}";
             using SQLiteConnection connection = new SQLiteConnection("Data Source=" + _dbFilePath);
             connection.Open();
-            using SQLiteCommand command1 = new SQLiteCommand(query, connection);
-            int rowCount = Convert.ToInt32(command1.ExecuteScalar());
+            using SQLiteCommand countRows = new SQLiteCommand(query, connection);
+            int rowCount = Convert.ToInt32(countRows.ExecuteScalar());
             if (rowCount <= 0) return;
             using var command = new SQLiteCommand(connection);
             command.CommandText = "SELECT * FROM " + _orders;
@@ -217,10 +215,9 @@ namespace WebShopCleanCode
                     CustomerId = reader.GetInt32(1),
                     ProductId = reader.GetInt32(2),
                     Name = reader.GetString(3),
-                    BoughtFor = reader.GetInt32(4)
+                    BoughtFor = reader.GetInt32(4),
+                    PurchaseTime = (DateTime)reader["PurchaseTime"]
                 };
-                var dateString = (DateTime)reader["PurchaseTime"];
-                order.PurchaseTime = dateString;
                 _ordersInDatabase.Add(order);
             }
         }
@@ -237,9 +234,8 @@ namespace WebShopCleanCode
                 }
             }
         }
-
         
-        //Updates a column that has a integer value in any you want table. 
+        //Updates a column that has a integer value in any table you want. 
         public void UpdateIntegerColumn(string table, string column, int value, int id)
         {
             var query = "UPDATE " + table + " SET " + column + " = @value WHERE id = @id";
