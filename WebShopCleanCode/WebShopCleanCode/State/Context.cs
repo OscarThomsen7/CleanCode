@@ -1,6 +1,7 @@
 ﻿using WebShopCleanCode.Builder.BuildCustomer;
 using WebShopCleanCode.Builder.BuildMenu;
 using WebShopCleanCode.Command;
+using WebShopCleanCode.Proxy;
 using WebShopCleanCode.State.StateOptions;
 using WebShopCleanCode.State.States;
 
@@ -13,7 +14,7 @@ public class Context
     private MenuTemplate _currentMenuState;
     private Dictionary<string, CommandExecutor> _commandDictionary = new();
     private MenuDirector _menuDirector = new();
-    public Database Database { get;} = new();
+    public ProxyDatabase ProxyDatabase { get;} = new();
     private CustomerBuilder _customerBuilder = new();
     public List<Product> Products { get;}
     public List<Customer?> Customers { get;}
@@ -29,8 +30,8 @@ public class Context
     public Context()
     {
         _currentMenuState = new MenuState(this, new MainOptions(this),_menuDirector.BuildMainMenu(IsLoggedIn));
-        Products = Database.GetProducts();
-        Customers = Database.GetCustomers();
+        Products = ProxyDatabase.GetProducts();
+        Customers = ProxyDatabase.GetCustomers();
         SetCommands();
     }
     
@@ -128,7 +129,7 @@ public class Context
                 return;
             }
             CurrentCustomer.Funds += amount;
-            Database.UpdateIntegerColumn("Customers", "Funds", CurrentCustomer.Funds, CurrentCustomer.Id);
+            ProxyDatabase.UpdateIntegerColumn("Customers", "Funds", CurrentCustomer.Funds, CurrentCustomer.Id);
             Message($"{amount} added to your profile.");
             return;
         }
@@ -255,7 +256,7 @@ public class Context
         Customers.Add(newCustomer);
         CurrentCustomer = newCustomer;
         IsLoggedIn = true;
-        Database.InsertCustomer(newCustomer);
+        ProxyDatabase.InsertCustomer(newCustomer);
         Console.WriteLine($"\n{CurrentCustomer.Username} successfully added and is now logged in.\n");
         ChangeState(new MenuState(this, new MainOptions(this), _menuDirector.BuildMainMenu(IsLoggedIn)));    }
     

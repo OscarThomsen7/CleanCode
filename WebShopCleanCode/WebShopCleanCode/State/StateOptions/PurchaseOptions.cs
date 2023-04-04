@@ -25,14 +25,14 @@ public class PurchaseOptions : IOption
             if (currentCustomer.CanAfford(product.Price))
             {
                 currentCustomer.Funds -= product.Price;
-                _context.Database.UpdateIntegerColumn("Customers", "Funds", currentCustomer.Funds, currentCustomer.Id);
+                _context.ProxyDatabase.UpdateIntegerColumn("Customers", "Funds", currentCustomer.Funds, currentCustomer.Id);
                 product.NrInStock -= 1;
                 
-                _context.Database.UpdateIntegerColumn("Products", "NumberInStock", product.NrInStock, product.Id);
+                _context.ProxyDatabase.UpdateIntegerColumn("Products", "NumberInStock", product.NrInStock, product.Id);
                 Order order = new Order(currentCustomer.Id, product.Id, product.Name, product.Price, DateTime.Now);
                 currentCustomer.Orders.Add(order);
                 
-                _context.Database.InsertOrder(order, currentCustomer, product);
+                _context.ProxyDatabase.InsertOrder(order, currentCustomer, product);
                 _context.Message($"Successfully bought {product.Name}");
                 return;
             }
