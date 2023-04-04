@@ -42,7 +42,7 @@ public class LoginOptions : IOption
             if (_context.Username.Equals(customer.Username) && _context.Password.Equals(customer.Password))
             {
                 _context.Message($"{ customer.Username} logged in.");
-                _context.SetCurrentCustomer(customer);
+                _context.Login(customer);
                 _context.ChangeState(new MenuState(_context, new MainOptions(_context), _menuDirector.BuildMainMenu(_context.IsLoggedIn)));                return;
             }
         }

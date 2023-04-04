@@ -35,7 +35,6 @@ public class MenuDirector
              
     }
     
-    
     public Menu BuildCustomerMenu()
     {
         return _menuBuilder.SetName("Customer menu")

@@ -75,7 +75,7 @@ public class Context
     }
     
     //sets the current customer to a customer object
-    public void SetCurrentCustomer(Customer? customer)
+    public void Login(Customer? customer)
     {
         CurrentCustomer = customer;
         IsLoggedIn = true;
